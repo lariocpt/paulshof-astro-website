@@ -1,0 +1,27 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+const entry = await getEntry('pages', 'contact');
+if (!entry) throw new Error('Missing content: src/content/pages/contact.mdx');
+---
+
+<Layout
+  title="Contact"
+  description={entry.data.description}
+  breadcrumbs={[{ label: 'Contact', href: '/contact/' }]}
+>
+  <PageHeader entry={entry} />
+
+  <div class="container-page contact-body">
+    <ContactForm />
+  </div>
+</Layout>
+
+<style>
+  .contact-body {
+    padding-block: var(--space-6) var(--space-22);
+  }
+</style>

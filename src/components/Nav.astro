@@ -1,0 +1,310 @@
+---
+import { Image } from 'astro:assets';
+import ThemeToggle from './ThemeToggle.astro';
+import { site } from '../site';
+import NavLinks from './NavLinks.astro';
+import icon from '../assets/brand/mark.svg';
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#main">
+    Skip to content
+  </a>
+
+  <nav class="nav container-page" aria-label="Primary">
+    <a class="brand" href="/" aria-label={`${site.name} — home`}>
+      <Image
+        class="brand-mark"
+        src={icon}
+        alt=""
+        width={26}
+        height={26}
+        loading="eager"
+      />
+      <span class="brand-word">
+        <span class="brand-word-full">{site.name}</span>
+        <span class="brand-word-short">{site.shortName}</span>
+      </span>
+    </a>
+
+    <NavLinks class="nav-links" />
+
+    <div class="nav-end">
+      <ThemeToggle />
+      <a class="btn btn-primary nav-cta" href="/contact/">
+        {site.ui.contact}
+      </a>
+      <button
+        type="button"
+        class="nav-burger"
+        aria-expanded="false"
+        aria-controls="nav-sheet"
+        aria-label="Open menu"
+      >
+        <svg
+          viewBox="0 0 20 20"
+          width="20"
+          height="20"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M2 5h16M2 10h16M2 15h16"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile sheet. Rendered in the DOM rather than injected on open so it is present for
+	     assistive tech and works without waiting on JS; `hidden` keeps it out of the tree
+	     until it is asked for. -->
+  <div class="nav-sheet" id="nav-sheet" hidden>
+    <NavLinks includeContact />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(0.5rem);
+    border-bottom: var(--border-strong) solid var(--color-divider);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    padding: var(--space-2) 0.875rem;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 800;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 3.875rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-right: auto;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: 0.9375rem;
+    text-transform: uppercase;
+  }
+
+  /* The mark is artwork, not typography: the icon carries its own brand ground,
+     so it needs no background of its own to read in either theme. */
+  .brand-mark {
+    display: block;
+    width: 1.625rem;
+    height: 1.625rem;
+  }
+
+  .brand-word-short {
+    display: none;
+  }
+
+  :global(.nav-links) {
+    display: flex;
+    align-items: center;
+    gap: 1.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links :global(a) {
+    position: relative;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--text-body-sm);
+    padding-block: var(--space-1);
+  }
+
+  /* Underline grows from the left rather than fading in — it reads as the rule system the
+     rest of the page is built from. */
+  .nav-links :global(a)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0.125rem;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .nav-links :global(a):hover::after,
+  .nav-links :global(a)[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .nav-end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .nav-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: var(--color-text);
+    background: transparent;
+    border: var(--border-width) solid var(--color-divider);
+    cursor: pointer;
+  }
+
+  .nav-sheet {
+    border-top: var(--border-strong) solid var(--color-divider);
+  }
+
+  .nav-sheet :global(ul) {
+    margin: 0;
+    padding: var(--space-2) 0;
+    list-style: none;
+  }
+
+  .nav-sheet :global(a) {
+    display: block;
+    padding: var(--space-3) var(--space-5);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-title-sm);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav-sheet :global(a)[aria-current='page'] {
+    color: var(--color-accent-ink);
+  }
+
+  @media (max-width: 67.5rem) {
+    :global(.nav-links) {
+      display: none;
+    }
+    .nav-burger {
+      display: inline-flex;
+    }
+    .nav-cta {
+      display: none;
+    }
+  }
+
+  @media (max-width: 26.25rem) {
+    .brand-word-full {
+      display: none;
+    }
+    .brand-word-short {
+      display: inline;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .nav-links :global(a)::after {
+      transition: transform 220ms var(--ease-out-quint);
+    }
+
+    .nav-sheet:not([hidden]) {
+      animation: sheet-in 240ms var(--ease-out-quint) both;
+    }
+
+    @keyframes sheet-in {
+      from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
+  :global(html:not([data-js])) .nav {
+    flex-wrap: wrap;
+  }
+  :global(html:not([data-js]) .nav-links) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  :global(html:not([data-js])) .nav-burger {
+    display: none;
+  }
+
+  @media (max-width: 28rem) {
+    .nav {
+      flex-wrap: wrap;
+      padding-block: var(--space-2);
+    }
+    .nav-end {
+      flex-wrap: wrap;
+      min-inline-size: 0;
+    }
+  }
+</style>
+
+<script>
+  let listeners: AbortController | undefined;
+  function wireNav() {
+    listeners?.abort();
+    listeners = new AbortController();
+    const { signal } = listeners;
+    const burger = document.querySelector<HTMLButtonElement>('.nav-burger');
+    const sheet = document.querySelector<HTMLElement>('#nav-sheet');
+    const header = document.querySelector<HTMLElement>('.site-header');
+    if (!burger || !sheet || !header) return;
+
+    const setOpen = (open: boolean) => {
+      sheet.hidden = !open;
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+
+    burger.addEventListener('click', () => setOpen(sheet.hidden === true), {
+      signal,
+    });
+
+    // Escape closes and returns focus to the control that opened it, otherwise focus is
+    // left on a hidden element and the next Tab starts from the top of the document.
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape' && !sheet.hidden) {
+          setOpen(false);
+          burger.focus();
+        }
+      },
+      { signal },
+    );
+  }
+
+  document.addEventListener('astro:before-swap', () => listeners?.abort());
+  document.addEventListener('astro:page-load', wireNav);
+</script>

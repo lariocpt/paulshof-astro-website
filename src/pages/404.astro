@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { navItems } from '../site';
+import icon from '../assets/brand/mark.svg';
+
+// Static hosts should serve dist/404.html for missing routes.
+
+const entry = await getEntry('pages', 'not-found');
+if (!entry) throw new Error('Missing content: src/content/pages/not-found.mdx');
+---
+
+<Layout title="Page not found" description="That page does not exist." noindex>
+  <PageHeader entry={entry} />
+
+  <div class="container-page not-found-mark">
+    <Image src={icon} alt="" width={56} height={56} />
+  </div>
+
+  <nav class="container-page not-found-nav" aria-label="Site sections">
+    <ul>
+      <li>
+        <a href="/">Home</a>
+      </li>
+      {navItems.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
+      <li>
+        <a href="/contact/">Contact</a>
+      </li>
+    </ul>
+  </nav>
+</Layout>
+
+<style>
+  .not-found-mark {
+    padding-block: var(--space-2) var(--space-8);
+  }
+
+  .not-found-mark img {
+    display: block;
+  }
+
+  .not-found-nav {
+    padding-block: 0 var(--space-24);
+  }
+
+  .not-found-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-7);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .not-found-nav a {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.0625rem;
+  }
+</style>

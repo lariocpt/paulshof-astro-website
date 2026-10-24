@@ -1,0 +1,27 @@
+---
+import { navItems } from '../site';
+interface Props {
+  class?: string;
+  includeContact?: boolean;
+}
+const { class: className, includeContact = false, ...rest } = Astro.props;
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const items = includeContact
+  ? [...navItems, { label: 'Contact', href: '/contact/' }]
+  : navItems;
+---
+
+<ul class={className} {...rest}>
+  {items.map((item) => (
+    <li>
+      <a
+        href={item.href}
+        aria-current={
+          path === (item.href.replace(/\/+$/, '') || '/') ? 'page' : undefined
+        }
+      >
+        {item.label}
+      </a>
+    </li>
+  ))}
+</ul>

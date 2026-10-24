@@ -1,0 +1,7 @@
+set -e
+
+bun run check
+bun run tscheck
+bun run lint
+
+bun run format:check

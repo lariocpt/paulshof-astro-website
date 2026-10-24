@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <rect width="1200" height="630" fill="#101827"/><rect x="80" y="80" width="1040" height="470" rx="24" fill="#1e293b"/>
+  <path d="M128 140h72v16h-72zm0 28h32v32h-32zm44 0h28v32h-28z" fill="#c7d2fe"/>
+  <text x="128" y="320" font-family="sans-serif" font-weight="bold" font-size="72" fill="#f8fafc">Website Starter</text>
+  <text x="128" y="390" font-family="sans-serif" font-size="32" fill="#c7d2fe">A clear starting point. Make it yours.</text>
+  </svg>

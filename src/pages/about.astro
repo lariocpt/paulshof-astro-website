@@ -1,0 +1,25 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import CareerTable from '../components/CareerTable.astro';
+import PosterCTA from '../components/PosterCTA.astro';
+
+const entry = await getEntry('pages', 'about');
+if (!entry) throw new Error('Missing content: src/content/pages/about.mdx');
+---
+
+<Layout
+  title="About"
+  description={entry.data.description}
+  breadcrumbs={[{ label: 'About', href: '/about/' }]}
+>
+  <PageHeader entry={entry} />
+
+  <Section id="track-record" eyebrow="Example timeline">
+    <CareerTable />
+  </Section>
+
+  <PosterCTA />
+</Layout>

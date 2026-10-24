@@ -1,0 +1,113 @@
+---
+import { getCollection, render } from 'astro:content';
+
+interface Props {
+  /** 2 when this list is the page's top-level content, 3 when nested under a section. */
+  headingLevel?: 2 | 3;
+}
+
+const { headingLevel = 3 } = Astro.props;
+const H = `h${headingLevel}` as const;
+
+const tools = (await getCollection('tools')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const rendered = await Promise.all(
+  tools.map(async (entry) => ({ entry, ...(await render(entry)) })),
+);
+---
+
+{/* A ruled list, deliberately not the two-column card grid used for projects above — these
+    are the same tools seen from a different angle, and repeating the card shape would read
+    as four more projects rather than as the roll-up of what is downloadable. */}
+<ul class="tools">
+  {rendered.map(({ entry, Content }, i) => (
+    <li class="tool" data-reveal data-reveal-delay={`${i * 70}ms`}>
+      <div class="tool-id">
+        <H class="tool-name">{entry.data.name}</H>
+        <p class="tool-kind">{entry.data.kind}</p>
+      </div>
+      <div class="tool-copy">
+        <Content />
+      </div>
+      <p class="tool-meta">
+        <span class="tool-licence">{entry.data.licence}</span>
+        <a href={entry.data.href} rel="noopener">
+          {entry.data.label}
+        </a>
+      </p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .tools {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: var(--border-width) solid var(--color-divider);
+  }
+
+  .tool {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) auto;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-8);
+    padding-block: 1.125rem;
+    border-bottom: var(--border-width) solid var(--color-divider);
+  }
+
+  .tool-name {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .tool-kind {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+
+  .tool-copy :global(p) {
+    margin: 0;
+    font-size: var(--text-body-sm);
+    line-height: 1.71;
+    color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  }
+
+  .tool-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: var(--space-4);
+    margin: 0;
+    font-size: var(--text-sm);
+    /* The licence is data, not emphasis — same muted weight as .tool-kind, so the link
+     * is the only thing in the row competing with the name. */
+    white-space: nowrap;
+  }
+
+  .tool-licence {
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Mirrors .project-links and the footer row: accent-ink, which is the brand at the
+     contrast ratio small text needs. --color-accent (the neon) would fail AA at this
+     size on the light ground. */
+  .tool-meta a {
+    color: var(--color-accent-ink);
+  }
+
+  @media (max-width: 51.25rem) {
+    .tool {
+      grid-template-columns: 1fr;
+      gap: 0.625rem;
+      padding-block: var(--space-5);
+    }
+
+    .tool-meta {
+      justify-content: flex-start;
+    }
+  }
+</style>

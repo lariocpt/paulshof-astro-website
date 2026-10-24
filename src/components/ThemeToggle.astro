@@ -1,0 +1,112 @@
+<fieldset class="theme-toggle" disabled>
+  <legend class="sr-only">Colour theme</legend>
+  {['system', 'light', 'dark'].map((choice) => (
+    <label>
+      <input
+        type="radio"
+        name="colour-theme"
+        value={choice}
+        checked={choice === 'system'}
+      />
+      <span>
+        {choice === 'system' ? 'Auto' : choice === 'light' ? 'Light' : 'Dark'}
+      </span>
+    </label>
+  ))}
+</fieldset>
+<style>
+  .theme-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    max-inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: var(--border-width) solid var(--color-divider);
+    min-inline-size: 0;
+  }
+  label {
+    position: relative;
+    cursor: pointer;
+  }
+  input,
+  .sr-only {
+    position: absolute;
+    width: 0.0625rem;
+    height: 0.0625rem;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  span {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    font-size: var(--text-xs);
+  }
+  input:checked + span {
+    background: var(--color-accent-fill);
+    color: var(--color-accent-on-fill);
+  }
+  input:focus-visible + span {
+    outline: var(--border-strong) solid var(--color-accent-ink);
+    outline-offset: -0.1875rem;
+  }
+  :global(html:not([data-js])) .theme-toggle {
+    display: none;
+  }
+</style>
+<script>
+  let choice = 'system';
+  let listeners: AbortController | undefined;
+  try {
+    choice = localStorage.getItem('theme') || 'system';
+  } catch {
+    /* Use the system preference. */
+  }
+
+  function applyTheme(root: HTMLElement) {
+    root.setAttribute('data-js', '');
+    if (choice === 'light' || choice === 'dark')
+      root.setAttribute('data-theme', choice);
+    else root.removeAttribute('data-theme');
+  }
+
+  function wireTheme() {
+    listeners?.abort();
+    listeners = new AbortController();
+    const { signal } = listeners;
+    applyTheme(document.documentElement);
+    const group = document.querySelector<HTMLFieldSetElement>('.theme-toggle');
+    if (!group) return;
+    group.disabled = false;
+    for (const input of group.querySelectorAll<HTMLInputElement>('input')) {
+      input.checked =
+        input.value === choice ||
+        (input.value === 'system' && !['light', 'dark'].includes(choice));
+    }
+    group.addEventListener(
+      'change',
+      (event) => {
+        const input = event.target as HTMLInputElement;
+        choice = input.value;
+        applyTheme(document.documentElement);
+        try {
+          localStorage.setItem('theme', choice);
+        } catch {
+          /* Keep the in-memory choice across page swaps. */
+        }
+      },
+      { signal },
+    );
+  }
+  document.addEventListener('astro:before-swap', (event) => {
+    listeners?.abort();
+    // Prepare the incoming root before Astro replaces its attributes, avoiding
+    // a theme flash even though the synchronous initializer only executes once.
+    applyTheme(
+      (event as Event & { newDocument: Document }).newDocument.documentElement,
+    );
+  });
+  document.addEventListener('astro:page-load', wireTheme);
+</script>

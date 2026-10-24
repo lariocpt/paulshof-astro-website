@@ -1,0 +1,12 @@
+# HTML and fixed-path files retain Netlify's default browser revalidation policy.
+# Keep the explicit root rule separate from fingerprinted asset caching.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# scripts/csp-head.mjs supplies a build-wide script/style hash policy in HTML.
+# This header adds the directive that cannot be enforced through a meta tag.
+/*
+  Content-Security-Policy: frame-ancestors 'none'

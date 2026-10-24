@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+
+interface Props {
+  /** Show the engagement type and the long copy — the /services page. */
+  detailed?: boolean;
+  /**
+   * 3 when nested under a section heading (the home page), 2 when this list IS the page's
+   * top-level content (/services). Hardcoding h3 would skip a level straight from the h1.
+   */
+  headingLevel?: 2 | 3;
+}
+
+const { detailed = false, headingLevel = 3 } = Astro.props;
+const H = `h${headingLevel}` as const;
+
+const services = (await getCollection('services')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const rendered = await Promise.all(
+  services.map(async (entry) => ({ entry, ...(await render(entry)) })),
+);
+---
+
+<ol class="services">
+  {rendered.map(({ entry, Content }, i) => (
+    <li class="service" data-reveal data-reveal-delay={`${i * 70}ms`}>
+      <p class="service-num" aria-hidden="true">
+        {entry.data.num}
+      </p>
+      <H class="service-title">{entry.data.title}</H>
+      <div class="service-copy">
+        {detailed ? <Content /> : <p>{entry.data.summary}</p>}
+        {detailed && <p class="service-engagement">{entry.data.engagement}</p>}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .services {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .service {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 22.5rem) minmax(0, 1fr);
+    gap: var(--space-6) var(--space-14);
+    align-items: baseline;
+    padding: var(--space-7) 0;
+    border-top: var(--border-strong) solid var(--color-divider);
+  }
+
+  .service-num {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+
+  .service-title {
+    font-size: var(--text-title);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .service-copy :global(p) {
+    font-size: 0.96875rem;
+    line-height: 1.8;
+    margin: 0;
+    max-width: 52ch;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+
+  .service-engagement {
+    margin-top: var(--space-3) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink) !important;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .service {
+      transition: border-color 200ms ease;
+    }
+
+    .service-num {
+      transition:
+        transform 260ms var(--ease-out-quint),
+        color 200ms ease;
+    }
+
+    .service:hover {
+      border-top-color: var(--color-accent);
+    }
+
+    .service:hover .service-num {
+      transform: translateX(0.375rem);
+      color: var(--color-accent-ink);
+    }
+  }
+
+  @media (max-width: 56.25rem) {
+    .service {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: var(--space-2) var(--space-5);
+    }
+
+    .service-copy {
+      grid-column: 2;
+    }
+  }
+</style>

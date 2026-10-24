@@ -1,0 +1,57 @@
+---
+// A ruled section with its accessible name wired to its own visible heading.
+//
+// The design's sections are introduced by a small uppercase accent line ("The stack, end to
+// end", "Measured, not asserted"). That line is not decoration — it is the section's heading,
+// so it is marked up as one and referenced by aria-labelledby. Rendering it as a styled <span>
+// and then adding a separate visually-hidden <h2> would be two names for one thing.
+
+interface Props {
+  /** Used to build the heading id, so it must be unique on the page. */
+  id: string;
+  eyebrow: string;
+  /** Draw the 2px divider above this section. */
+  ruled?: boolean;
+  class?: string;
+}
+
+const { id, eyebrow, ruled = true, class: className } = Astro.props;
+const headingId = `${id}-heading`;
+---
+
+{ruled && <hr class="rule" data-reveal-rule />}
+
+<section
+  id={id}
+  aria-labelledby={headingId}
+  class:list={['section', className]}
+>
+  <div class="container-page">
+    <h2 id={headingId} class="eyebrow">
+      {eyebrow}
+    </h2>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .rule {
+    height: 0.125rem;
+    border: 0;
+    margin: 0;
+    background: var(--color-divider);
+  }
+  .section {
+    padding-block: var(--space-14);
+  }
+
+  .eyebrow {
+    margin: 0 0 var(--space-7);
+  }
+
+  @media (max-width: 45rem) {
+    .section {
+      padding-block: var(--space-10);
+    }
+  }
+</style>

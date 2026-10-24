@@ -1,0 +1,119 @@
+---
+import { site } from '../site';
+---
+
+<form
+  class="contact-form"
+  data-demo-form
+  data-astro-reload
+  data-result={site.ui.formResult}
+  aria-describedby="contact-note"
+>
+  <div class="field">
+    <label for="contact-name">{site.ui.name}</label>
+    <input
+      class="input"
+      id="contact-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+    />
+  </div>
+  <div class="field">
+    <label for="contact-email">{site.ui.email}</label>
+    <input
+      class="input"
+      id="contact-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+    />
+  </div>
+  <div class="field">
+    <label for="contact-budget">{site.ui.budget}</label>
+    <input class="input" id="contact-budget" name="budget" type="text" />
+  </div>
+  <div class="field">
+    <label for="contact-brief">{site.ui.brief}</label>
+    <textarea
+      class="input"
+      id="contact-brief"
+      name="brief"
+      rows="6"
+      required
+    ></textarea>
+  </div>
+  <button class="btn btn-primary" type="submit" disabled data-demo-submit>
+    {site.ui.submit}
+  </button>
+  <p id="contact-note">{site.ui.formNote}</p>
+  <p role="status" data-form-status></p>
+  <noscript>
+    <p>
+      Enable JavaScript to preview the example submission. No message is sent.
+    </p>
+  </noscript>
+</form>
+<style>
+  .input {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: var(--space-2) var(--space-3);
+    font: inherit;
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    caret-color: var(--color-accent);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-md);
+  }
+  .contact-form {
+    max-width: 40rem;
+  }
+  .field {
+    margin-block-end: var(--space-4);
+  }
+  label {
+    display: block;
+    margin-block-end: var(--space-one-half);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+  p {
+    margin-block: var(--space-4) 0;
+  }
+  [role='status']:empty {
+    display: none;
+  }
+</style>
+<script>
+  let listeners: AbortController | undefined;
+  function wireForms() {
+    listeners?.abort();
+    listeners = new AbortController();
+    const { signal } = listeners;
+    for (const form of document.querySelectorAll<HTMLFormElement>(
+      '[data-demo-form]',
+    )) {
+      const button =
+        form.querySelector<HTMLButtonElement>('[data-demo-submit]');
+      const status = form.querySelector<HTMLElement>('[data-form-status]');
+      if (!button || !status) continue;
+      form.addEventListener(
+        'submit',
+        (event) => {
+          event.preventDefault();
+          status.textContent = form.dataset.result || '';
+        },
+        { signal },
+      );
+      button.disabled = false;
+    }
+  }
+  document.addEventListener('astro:before-swap', () => listeners?.abort());
+  document.addEventListener('astro:page-load', wireForms);
+</script>

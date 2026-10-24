@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.agents/
+.claude/
+.codex/
+.husky/_/
+bun.lock
+src/assets/
+public/

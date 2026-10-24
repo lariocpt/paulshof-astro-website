@@ -1,0 +1,30 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CaseList from '../components/CaseList.astro';
+import PosterCTA from '../components/PosterCTA.astro';
+
+const entry = await getEntry('pages', 'work');
+if (!entry) throw new Error('Missing content: src/content/pages/work.mdx');
+---
+
+<Layout
+  title="Work"
+  description={entry.data.description}
+  breadcrumbs={[{ label: 'Work', href: '/work/' }]}
+>
+  <PageHeader entry={entry} />
+
+  <div class="container-page page-body">
+    <CaseList headingLevel={2} />
+  </div>
+
+  <PosterCTA />
+</Layout>
+
+<style>
+  .page-body {
+    padding-bottom: var(--space-18);
+  }
+</style>

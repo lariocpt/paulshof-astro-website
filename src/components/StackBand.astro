@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const areas = (await getCollection('stack')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const rendered = await Promise.all(
+  areas.map(async (entry) => ({ entry, ...(await render(entry)) })),
+);
+---
+
+<div class="stack-band">
+  {rendered.map(({ entry, Content }, i) => (
+    <div class="stack-area" data-reveal data-reveal-delay={`${i * 70}ms`}>
+      <h3>{entry.data.area}</h3>
+      <Content />
+    </div>
+  ))}
+</div>
+
+<style>
+  .stack-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+  }
+
+  .stack-area h3 {
+    font-size: 1.0625rem;
+    margin: 0 0 0.625rem;
+  }
+
+  .stack-area :global(p) {
+    font-size: var(--text-body-sm);
+    line-height: 1.71;
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  }
+
+  @media (max-width: 56.25rem) {
+    .stack-band {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 35rem) {
+    .stack-band {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>

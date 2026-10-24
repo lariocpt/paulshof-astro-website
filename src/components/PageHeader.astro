@@ -1,0 +1,62 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+
+// The <h1> block every inner page opens with. Centralised so the one-h1-per-page rule is
+// structural rather than a thing each page has to remember.
+
+interface Props {
+  entry: CollectionEntry<'pages'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<header class="page-header">
+  <div class="container-page">
+    {entry.data.eyebrow && (
+      <p class="eyebrow" data-reveal>
+        {entry.data.eyebrow}
+      </p>
+    )}
+    <h1 data-reveal data-reveal-delay="70ms">
+      {entry.data.heading}
+    </h1>
+    <div class="page-lead" data-reveal data-reveal-delay="140ms">
+      <Content />
+    </div>
+  </div>
+</header>
+
+<style>
+  .page-header {
+    padding-block: var(--space-22) var(--space-12);
+  }
+
+  .eyebrow {
+    margin: 0 0 var(--space-6);
+  }
+
+  .page-header h1 {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.625rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin: 0;
+    margin-left: -0.045em;
+    max-width: 22ch;
+  }
+
+  .page-lead :global(p) {
+    font-size: 1.09375rem;
+    line-height: 1.7;
+    max-width: 62ch;
+    margin: var(--space-6) 0 0;
+    color: color-mix(in srgb, var(--color-text) 82%, transparent);
+  }
+
+  @media (max-width: 45rem) {
+    .page-header {
+      padding-block: var(--space-12) var(--space-8);
+    }
+  }
+</style>

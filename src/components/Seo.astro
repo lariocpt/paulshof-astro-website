@@ -1,0 +1,86 @@
+---
+import type { ImageMetadata } from 'astro';
+import defaultOg from '../assets/og/default.png';
+import { site } from '../site';
+interface Crumb {
+  label: string;
+  href: string;
+}
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  breadcrumbs?: Crumb[];
+  schema?: Record<string, unknown>[];
+}
+const {
+  title,
+  description,
+  image = defaultOg,
+  imageAlt = site.tagline,
+  type = 'website',
+  noindex = false,
+  breadcrumbs = [],
+  schema = [],
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogUrl = new URL(image.src, Astro.site);
+const fullTitle =
+  Astro.url.pathname === '/'
+    ? `${site.name} — ${site.titleSuffix}`
+    : `${title} · ${site.name}`;
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'WebSite',
+    '@id': `${new URL('/', Astro.site)}#website`,
+    name: site.name,
+    url: new URL('/', Astro.site).href,
+    description: site.description,
+    inLanguage: site.locale,
+  },
+];
+if (breadcrumbs.length)
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ label: 'Home', href: '/' }, ...breadcrumbs].map(
+      (crumb, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: crumb.label,
+        item: new URL(crumb.href, Astro.site).href,
+      }),
+    ),
+  });
+graph.push(...schema);
+// Escape HTML-significant characters because this JSON is embedded in a script element.
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': graph,
+}).replace(/</g, '\u003c');
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical.href} />
+{(noindex || !site.indexable) && (
+  <meta name="robots" content="noindex, follow" />
+)}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.localeOg} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical.href} />
+<meta property="og:image" content={ogUrl.href} />
+<meta property="og:image:width" content={String(image.width)} />
+<meta property="og:image:height" content={String(image.height)} />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogUrl.href} />
+<meta name="twitter:image:alt" content={imageAlt} />
+<script type="application/ld+json" set:html={jsonLd} is:inline />
