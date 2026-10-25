@@ -1,0 +1,34 @@
+[
+  {
+    "name": "homepage-concept",
+    "model": "qwen-image",
+    "owner": "bigcachy",
+    "scope": "Exclusive RTX job; encoder/cache offloaded to CPU; preserves fixed profile and operator policy.",
+    "images": [
+      "/mnt/xfs/AI_Models/image-generation/output/lario_qwen-image_4d1607a9444347e88a0ab68681b75adb_00001_.png"
+    ],
+    "generation_seconds": 52.745,
+    "chat_restore": {
+      "profile_id": "rtx5080.qwen3.8.c65536.kq4_0-vq4_0.s1.fast-64k.9e454d88b2",
+      "restored": true,
+      "admission_resumed": true
+    },
+    "total_seconds_with_restore": 60.265
+  },
+  {
+    "name": "brand-system-concept",
+    "model": "qwen-image",
+    "owner": "bigcachy",
+    "scope": "Exclusive RTX job; encoder/cache offloaded to CPU; preserves fixed profile and operator policy.",
+    "images": [
+      "/mnt/xfs/AI_Models/image-generation/output/lario_qwen-image_60fa9e6856704b8b932070b5ed91b122_00001_.png"
+    ],
+    "generation_seconds": 46.693,
+    "chat_restore": {
+      "profile_id": "rtx5080.qwen3.8.c65536.kq4_0-vq4_0.s1.fast-64k.9e454d88b2",
+      "restored": true,
+      "admission_resumed": true
+    },
+    "total_seconds_with_restore": 53.7
+  }
+]
