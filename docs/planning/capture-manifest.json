@@ -4,8 +4,8 @@
   "owner": "cachyos-mini-mobile",
   "page_count": 38,
   "widths": [
-    400, 479, 480, 576, 600, 767, 768, 782, 979, 980, 991, 992, 999, 1199, 1200, 1440,
-    1920
+    400, 479, 480, 576, 600, 767, 768, 782, 979, 980, 991, 992, 999, 1199, 1200,
+    1440, 1920
   ],
   "capture_count": 646,
   "image_files": 658,
@@ -6572,7 +6572,10 @@
       "title": "The Sterkfontein Caves - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 99],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          99
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -6652,7 +6655,10 @@
       "title": "Maropeng Cradle of Human Kind - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 99],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          99
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -6732,7 +6738,10 @@
       "title": "Johannesburg Country Club - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 88],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          88
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -6814,7 +6823,10 @@
       "title": "Bryanston Country Club - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 83],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          83
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -6896,7 +6908,10 @@
       "title": "Cedar Square - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 88],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          88
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -6978,7 +6993,10 @@
       "title": "Prison Break Market - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 87],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          87
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -7060,7 +7078,10 @@
       "title": "Pineslopes Boulevard - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 88],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          88
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -7142,7 +7163,10 @@
       "title": "Montecasino - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 87],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          87
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -7224,7 +7248,10 @@
       "title": "Design Quarter - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 87],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          87
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -7306,7 +7333,10 @@
       "title": "Orexi Greek Street Food - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 87],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          87
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["FontAwesome", 2],
@@ -7388,7 +7418,10 @@
       "title": "Extreme Adventures in Johannesburg - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 115],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          115
+        ],
         ["sans-serif", 36],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["Georgia, \"Times New Roman\", Times, serif", 2],
@@ -7482,7 +7515,10 @@
       "title": "Carnivores Restaurant - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 107],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          107
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7562,7 +7598,10 @@
       "title": "Soweto - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 99],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          99
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7642,7 +7681,10 @@
       "title": "The Rhino and Lion Park - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 100],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          100
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7722,7 +7764,10 @@
       "title": "The Johannesburg Zoo - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 107],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          107
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7802,7 +7847,10 @@
       "title": "Pilansberg Nature Reserve - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 110],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          110
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7882,7 +7930,10 @@
       "title": "Sun City - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 104],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          104
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -7962,7 +8013,10 @@
       "title": "Gold Reef City - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 104],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          104
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8042,7 +8096,10 @@
       "title": "Johannesburg Botanical Gardens - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 104],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          104
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8122,7 +8179,10 @@
       "title": "Hartbeespoort Dam - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 103],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          103
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8202,7 +8262,10 @@
       "title": "Montecasino Bird Gardens - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 104],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          104
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8282,7 +8345,10 @@
       "title": "Nelson Mandela Square - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 107],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          107
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8362,7 +8428,10 @@
       "title": "Rosebank Mall - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 104],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          104
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8442,7 +8511,10 @@
       "title": "Sandton City - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 105],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          105
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8522,7 +8594,10 @@
       "title": "The Sandton Convention Centre - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 106],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          106
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8602,7 +8677,10 @@
       "title": "Gallagher Convention Centre - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 105],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          105
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8682,7 +8760,10 @@
       "title": "Moyo - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 107],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          107
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8762,7 +8843,10 @@
       "title": "Yamato Japanese Restaurant - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 110],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          110
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2]
@@ -8841,7 +8925,10 @@
     "https://www.accommodationpaulshof.co.za/": {
       "title": "Explore Home - No 5 On Franschoek: A Unique Retreat",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 168],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          168
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["sans-serif", 37],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
@@ -8939,7 +9026,10 @@
       "title": "Guest Book - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 1565],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 201],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          201
+        ],
         ["sans-serif", 37],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["\"Trustindex Asap Condensed\"", 2],
@@ -9034,7 +9124,10 @@
       "title": "Rates - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 112],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          112
+        ],
         ["sans-serif", 35],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
         ["Georgia, \"Times New Roman\", Times, serif", 2],
@@ -9116,7 +9209,10 @@
     "https://www.accommodationpaulshof.co.za/things-to-do/": {
       "title": "Things To Do - No 5 On Franschoek",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 536],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          536
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["sans-serif", 41],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
@@ -9221,7 +9317,10 @@
     "https://www.accommodationpaulshof.co.za/contact-us/": {
       "title": "Contact Us - No 5 On Franschoek",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 136],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          136
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["sans-serif", 36],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
@@ -9314,7 +9413,10 @@
     "https://www.accommodationpaulshof.co.za/map/": {
       "title": "Map & Directions - No 5 On Franschoek",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 145],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          145
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["sans-serif", 36],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
@@ -9404,7 +9506,10 @@
     "https://www.accommodationpaulshof.co.za/gallery/": {
       "title": "Gallery - No 5 On Franschoek",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 1358],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          1358
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["sans-serif", 41],
         ["Georgia, \"Times New Roman\", Times, serif", 10],
@@ -9530,7 +9635,10 @@
     "https://www.accommodationpaulshof.co.za/767-2/": {
       "title": "- No 5 On Franschoek",
       "fonts": [
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 286],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          286
+        ],
         ["\"Trustindex Poppins\"", 136],
         ["\"Trip Sans VF\", \"Trip Sans\", Arial, sans-serif", 38],
         ["sans-serif", 36],
@@ -9636,7 +9744,10 @@
       "title": "Virtual Tours - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 128],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          128
+        ],
         ["sans-serif", 38],
         ["Georgia, \"Times New Roman\", Times, serif", 6],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
@@ -9752,7 +9863,10 @@
       "title": "V Tours - No 5 On Franschoek",
       "fonts": [
         ["\"Trustindex Poppins\"", 136],
-        ["\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif", 116],
+        [
+          "\"Century Gothic\", Arial, \"Arial Unicode MS\", Helvetica, sans-serif",
+          116
+        ],
         ["sans-serif", 36],
         ["Georgia, \"Times New Roman\", Times, serif", 5],
         ["Verdana, Geneva, Arial, Helvetica, sans-serif", 2],
