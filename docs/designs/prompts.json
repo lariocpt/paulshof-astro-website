@@ -1,0 +1,20 @@
+[
+  {
+    "name": "homepage-concept",
+    "model": "qwen-image",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261027,
+    "steps": 25,
+    "prompt": "Use case: ui-mockup. Create a high fidelity proposed hospitality homepage for the existing brand No 5 on Franschhoek in Paulshof, South Africa. Preserve the exact business name No 5 on Franschhoek. This is a design concept, not a photograph of the real property. Spacious desktop layout: refined wordmark header, simple navigation, editorial garden hero image area, prominent Book your stay CTA, two accommodation preview cards, location section and compact footer. Warm ivory background, deep burgundy typography and buttons, muted botanical green accents. Elegant editorial serif headings, clean readable sans-serif UI. Contemporary calm hospitality; fine dividers and generous spacing. Short headings and legible text. No invented star ratings, awards, prices or reviews. Include a small Design concept label. No browser chrome, no watermark."
+  },
+  {
+    "name": "brand-system-concept",
+    "model": "qwen-image",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261028,
+    "steps": 25,
+    "prompt": "Use case: logo-brand. Create a polished proposed website design-system presentation board for the existing guesthouse No 5 on Franschhoek, Paulshof. Preserve the exact name No 5 on Franschhoek. Elegant flat editorial grid on warm ivory: wordmark typography exploration, serif headline and clean sans-serif body pairing, dark burgundy and muted botanical green swatches, primary burgundy booking button with white label, secondary outlined button, two restrained accommodation card layouts and a narrow mobile homepage composition. Large whitespace, refined hospitality, accessible visual hierarchy, minimal short readable text. Treat all imagery as illustrative concepts, not actual property photographs. No fake amenities, prices, awards or ratings. Include Proposed design system label. No watermark or browser chrome."
+  }
+]
