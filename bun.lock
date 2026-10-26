@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "astro-website-starter",
+      "name": "paulshof-astro-website",
       "dependencies": {
         "@astrojs/mdx": "^8.1.1",
         "@astrojs/sitemap": "^3.7.4",

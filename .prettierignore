@@ -6,5 +6,6 @@ dist/
 .codex/
 .husky/_/
 bun.lock
+docs/planning/evidence/
 src/assets/
 public/
