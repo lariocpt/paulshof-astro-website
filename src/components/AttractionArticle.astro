@@ -1,0 +1,53 @@
+---
+// The one article shell for attraction and information posts. The heading is the entry's own
+// (one h1 per page comes from the page composition; inside an article the title is h1 and
+// any sub-headings inside the body are h2/h3 through the shared .prose measure). Text only —
+// third-party attraction imagery was not carried over.
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  headingLevel?: 'h1' | 'h2';
+}
+
+const { title, eyebrow, headingLevel = 'h1' } = Astro.props;
+const Heading = `h${headingLevel.slice(1)}` as 'h1' | 'h2';
+---
+
+<article class="attraction-article container-page">
+  <header class="attraction-article-head">
+    {eyebrow && (
+      <p class="eyebrow" data-reveal>
+        {eyebrow}
+      </p>
+    )}
+    <Heading class="attraction-article-title" data-reveal>
+      {title}
+    </Heading>
+  </header>
+  <div class="prose" data-reveal>
+    <slot />
+  </div>
+</article>
+
+<style>
+  .attraction-article {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .attraction-article-head {
+    margin-block-end: var(--space-6);
+  }
+
+  .attraction-article-title {
+    margin: 0;
+    color: var(--color-accent-ink);
+    max-inline-size: 24ch;
+  }
+
+  @media (max-width: 45rem) {
+    .attraction-article {
+      padding-block: var(--space-10) var(--space-12);
+    }
+  }
+</style>

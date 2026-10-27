@@ -148,6 +148,9 @@ pre {
 
   --color-bg: var(--brand-ivory);
   --color-surface: var(--brand-panel);
+  /* A clean white for form fields, so an input reads as fillable on the ivory page rather
+     than receding into it. A role token, not a literal: components never write the hex. */
+  --color-field: var(--brand-paper);
   --color-text: var(--brand-ink);
   --color-divider: color-mix(in srgb, var(--color-text) 32%, transparent);
 
@@ -373,6 +376,60 @@ figure {
   font-size: var(--text-sm);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--color-accent-ink);
+}
+
+/*
+ * The shared prose measure. The global reset strips markers and heading margins from
+ * everything, so long-form body needs its rhythm restored in one place rather than per
+ * component: Prose blocks, attraction articles and information pages all consume this.
+ * Lists keep their markers on purpose — a list without them stops being a list to a
+ * screen reader that leans on markup rather than visuals.
+ */
+.prose {
+  max-inline-size: var(--measure-prose);
+}
+
+.prose p {
+  margin: 0 0 var(--space-4);
+  line-height: var(--leading-prose);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 var(--space-4);
+  padding-inline-start: var(--space-5);
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin-block-end: var(--space-2);
+  line-height: var(--leading-prose);
+}
+
+.prose a {
+  color: var(--color-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.1875rem;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose h2 {
+  margin-block: var(--space-8) var(--space-3);
+  font-size: var(--text-display);
+  color: var(--color-accent-ink);
+}
+
+.prose h3 {
+  margin-block: var(--space-6) var(--space-2);
+  font-size: var(--text-display-sm);
   color: var(--color-accent-ink);
 }
 

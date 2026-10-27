@@ -52,37 +52,6 @@ const Heading = `h${entry.data.level}` as 'h2' | 'h3';
     color: var(--color-text-muted);
   }
 
-  .prose {
-    max-inline-size: var(--measure-prose);
-  }
-
-  .prose :global(p) {
-    margin: 0 0 var(--space-4);
-    line-height: var(--leading-prose);
-  }
-
-  .prose :global(ul) {
-    margin: 0 0 var(--space-4);
-    padding-inline-start: var(--space-5);
-    /* The reset strips markers globally; a list of terms has to keep them. */
-    list-style: disc;
-  }
-
-  .prose :global(li) {
-    margin-block-end: var(--space-2);
-    line-height: var(--leading-prose);
-  }
-
-  .prose :global(a) {
-    color: var(--color-accent-ink);
-    text-decoration: underline;
-    text-underline-offset: 0.1875rem;
-  }
-
-  .prose :global(strong) {
-    font-weight: 700;
-  }
-
   @media (max-width: 45rem) {
     .prose-block {
       padding-block: var(--space-8);

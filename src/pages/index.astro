@@ -1,13 +1,16 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import PageHeader from '../components/PageHeader.astro';
+import PropertyHero from '../components/PropertyHero.astro';
 import Prose from '../components/Prose.astro';
 import BookingCallToAction from '../components/BookingCallToAction.astro';
 import { site } from '../site';
+import { heroPhoto } from '../data/photography';
 
-// The house, in the hosts' own words. Photography joins this page in the next phase; what
-// is here now is the text that was published on the previous home page, unembellished.
+// The house, in the hosts' own words, opened on one real photograph of it. Photography and
+// the gallery / guest-book teasers grow with the routes they point at; what is here now is
+// the text that was published on the previous home page, unembellished, and the single
+// bedroom frame large enough to carry a hero without upscaling.
 const intro = await getEntry('pages', 'home');
 if (!intro) throw new Error('Missing content: src/content/pages/home.mdx');
 
@@ -20,8 +23,25 @@ const blocks = (
 ).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Home" description={intro.data.description}>
-  <PageHeader entry={intro} />
+<Layout
+  title="Home"
+  description={intro.data.description}
+  image={heroPhoto.image}
+  imageAlt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
+>
+  <PropertyHero
+    image={heroPhoto.image}
+    alt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
+    eyebrow={intro.data.eyebrow}
+    title={intro.data.heading}
+    lead={intro.body}
+    sizes="(min-width: 60rem) 50vw, 100vw"
+  >
+    <BookingCallToAction />
+    <a class="btn btn-secondary hero-rates" href="/rates/">
+      Rates and what's included
+    </a>
+  </PropertyHero>
 
   <div>
     {blocks.map((block) => (
@@ -45,6 +65,10 @@ const blocks = (
 </Layout>
 
 <style>
+  .hero-rates {
+    text-decoration: none;
+  }
+
   .home-booking {
     padding-block: var(--space-14) var(--space-22);
   }

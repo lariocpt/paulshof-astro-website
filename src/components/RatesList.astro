@@ -1,0 +1,104 @@
+---
+// The rates structure as a definition list — deposits, balance, check-in and check-out, what
+// breakfast includes — with no prices, because the property publishes none and this rebuild
+// invents none. Values are only ever the terms the source states. Keeping them as term/detail
+// pairs (rather than a loose paragraph) makes each condition individually readable, which is
+// what a guest comparing booking terms actually wants.
+
+interface Entry {
+  term: string;
+  detail: string;
+}
+
+interface Props {
+  heading?: string;
+  entries: Entry[];
+  id?: string;
+  note?: string;
+}
+
+const { heading = 'Terms that apply', entries, id, note } = Astro.props;
+const anchor =
+  id ??
+  heading
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+---
+
+<section
+  class="rates-list container-page"
+  id={anchor}
+  aria-labelledby={`${anchor}-heading`}
+>
+  <h2 id={`${anchor}-heading`} class="rates-heading" data-reveal>
+    {heading}
+  </h2>
+  {note && (
+    <p class="rates-note" data-reveal>
+      {note}
+    </p>
+  )}
+  <dl class="rates-entries">
+    {entries.map((entry) => (
+      <div class="rate-entry">
+        <dt>{entry.term}</dt>
+        <dd>{entry.detail}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .rates-list {
+    padding-block: var(--space-8) var(--space-10);
+  }
+
+  .rates-heading {
+    margin: 0 0 var(--space-3);
+    color: var(--color-accent-ink);
+  }
+
+  .rates-note {
+    margin: 0 0 var(--space-5);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .rates-entries {
+    margin: 0;
+    padding: 0;
+    max-inline-size: 52ch;
+  }
+
+  .rate-entry {
+    display: grid;
+    grid-template-columns: minmax(10rem, auto) 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-3);
+    border-block-end: var(--border-width) solid var(--color-divider);
+  }
+
+  .rate-entry dt {
+    font-size: var(--text-body-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .rate-entry dd {
+    margin: 0;
+    line-height: var(--leading-prose);
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 45rem) {
+    .rate-entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

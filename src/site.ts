@@ -51,15 +51,17 @@ export const site = {
     /** First half of that strip; the number is linked separately. */
     callStrip: 'For A Luxury Bed And Breakfast In Paulshof',
     contact: 'Contact us',
-    approach: 'Explore the approach',
     footer: 'Luxury Bed and Breakfast Sandton',
+    // The enquiry form is a demo until a real handler is configured. The labels and the
+    // status line all say so in plain terms: nothing here may imply a message reached the
+    // property, and the note points back at the phone and email that actually do.
     name: 'Name',
     email: 'Email',
-    budget: 'Budget range (optional)',
-    brief: 'Project brief',
-    submit: 'Preview submission',
-    formNote: 'This example does not send or store messages.',
-    formResult: 'Demo complete. No message was sent or stored.',
+    message: 'Message',
+    submit: 'Preview enquiry',
+    formNote:
+      'This form is a preview and does not send or store your message. Phone or email reaches Nicki or Mary directly.',
+    formResult: 'Preview complete. No message was sent or stored.',
   },
 } as const;
 

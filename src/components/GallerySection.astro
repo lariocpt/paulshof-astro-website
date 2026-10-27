@@ -1,0 +1,87 @@
+---
+import type { PhotoGroup } from '../data/photography';
+import GalleryGrid from './GalleryGrid.astro';
+
+// The group shell: one anchorable section per gallery group, with the group's own published
+// label as its heading. On a gallery page every group is an h2 under the page h1 — never
+// nine h1s (defect 10 and 11 territory). The heading doubles as a stable anchor so a link
+// can point straight at one room or area.
+
+interface Props {
+  group: PhotoGroup;
+  headingLevel?: 'h2' | 'h3';
+  /** Cap the frames shown, for a home-page preview of a group. */
+  limit?: number;
+  /** Optional "See all" destination (only for routes that exist). */
+  moreHref?: string;
+  moreLabel?: string;
+}
+
+const {
+  group,
+  headingLevel = 'h2',
+  limit,
+  moreHref,
+  moreLabel = `See all ${group.label} photos`,
+} = Astro.props;
+
+const photos =
+  typeof limit === 'number' ? group.photos.slice(0, limit) : group.photos;
+const Heading = `h${headingLevel.slice(1)}` as 'h2' | 'h3';
+---
+
+<section
+  class="gallery-section"
+  id={group.id}
+  aria-labelledby={`${group.id}-heading`}
+>
+  <div class="container-page">
+    <div class="gallery-head">
+      <Heading id={`${group.id}-heading`} class="gallery-heading" data-reveal>
+        {group.label}
+      </Heading>
+      {moreHref && (
+        <a class="gallery-more" href={moreHref}>
+          {moreLabel}
+        </a>
+      )}
+    </div>
+    <p class="gallery-count" data-reveal>
+      {group.photos.length}{' '}
+      {group.photos.length === 1 ? 'photograph' : 'photographs'}
+    </p>
+    <GalleryGrid photos={photos} altPrefix={group.label} />
+  </div>
+</section>
+
+<style>
+  .gallery-section {
+    padding-block: var(--space-8) var(--space-10);
+  }
+
+  .gallery-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .gallery-heading {
+    margin: 0;
+    color: var(--color-accent-ink);
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .gallery-more {
+    font-weight: 700;
+    font-size: var(--text-body-sm);
+    color: var(--color-accent-ink);
+  }
+
+  .gallery-count {
+    margin: var(--space-1) 0 var(--space-5);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+</style>
