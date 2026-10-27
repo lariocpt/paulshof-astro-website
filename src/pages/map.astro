@@ -1,0 +1,32 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import LocationPanel from '../components/LocationPanel.astro';
+import {
+  directionsRouteLabel,
+  directionsSearchNote,
+  directionsSteps,
+} from '../data/directions';
+
+// Directions as the property published them, plus labelled links that open the address in a
+// map app on the guest's own tap. No embed: the CSP carries no frame-src, and a third-party
+// map would phone home before anyone chose to use it. The address already carries the
+// Paulshof suburb, which is the pin the property asks people to search for.
+const intro = await getEntry('pages', 'map');
+if (!intro) throw new Error('Missing content: src/content/pages/map.mdx');
+---
+
+<Layout
+  title="Directions"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Directions', href: '/map/' }]}
+>
+  <PageHeader entry={intro} />
+  <LocationPanel
+    heading="Where to find us"
+    steps={directionsSteps}
+    routeLabel={directionsRouteLabel}
+    searchNote={directionsSearchNote}
+  />
+</Layout>

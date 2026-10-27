@@ -1,0 +1,26 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import GallerySection from '../components/GallerySection.astro';
+import { photoGroups } from '../data/photography';
+
+// The whole gallery, one anchorable section per group the previous site published, in the
+// same order. Each group is an h2 under the page h1 — never nine h1s — and carries a stable
+// anchor so a link or a home-page preview can point straight at one room or area.
+const intro = await getEntry('pages', 'gallery');
+if (!intro) throw new Error('Missing content: src/content/pages/gallery.mdx');
+---
+
+<Layout
+  title="Gallery"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Gallery', href: '/gallery/' }]}
+>
+  <PageHeader entry={intro} />
+  <div>
+    {photoGroups.map((group) => (
+      <GallerySection group={group} headingLevel="h2" />
+    ))}
+  </div>
+</Layout>

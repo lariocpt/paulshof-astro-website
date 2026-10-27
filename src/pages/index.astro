@@ -57,7 +57,7 @@ const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
     </a>
   </PropertyHero>
 
-  {grounds && <GallerySection group={grounds} limit={4} />}
+  {grounds && <GallerySection group={grounds} limit={4} moreHref="/gallery/" />}
 
   <div>
     {blocks.map((block) => (
@@ -66,10 +66,19 @@ const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
   </div>
 
   {roomsGroup && (
-    <GallerySection group={roomsGroup} limit={3} headingLevel="h2" />
+    <GallerySection
+      group={roomsGroup}
+      limit={3}
+      headingLevel="h2"
+      moreHref="/gallery/"
+    />
   )}
 
   <GuestFeedback heading="What guests say" quotes={featuredGuestQuotes} />
+
+  <div class="guest-book-link container-page">
+    <a href="/guest-book/">Read more from our guest book</a>
+  </div>
 
   <LocationPanel
     heading="Where to find us"
@@ -96,6 +105,15 @@ const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
 <style>
   .hero-rates {
     text-decoration: none;
+  }
+
+  .guest-book-link {
+    padding-block: var(--space-8) 0;
+  }
+
+  .guest-book-link a {
+    color: var(--color-accent-ink);
+    font-weight: 700;
   }
 
   .home-booking {
