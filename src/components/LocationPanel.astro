@@ -14,9 +14,18 @@ interface Props {
   heading?: string;
   /** Turn-by-turn steps as the property publishes them. Rendered as an ordered list. */
   steps?: string[];
+  /** Where the steps start from, as the source labels them. */
+  routeLabel?: string;
+  /** The property's own search advice, shown beside the map links. */
+  searchNote?: string;
 }
 
-const { heading = 'Where to find us', steps = [] } = Astro.props;
+const {
+  heading = 'Where to find us',
+  steps = [],
+  routeLabel,
+  searchNote,
+} = Astro.props;
 
 const query = encodeURIComponent(site.address.full);
 const links = [
@@ -47,7 +56,7 @@ const links = [
 
       {steps.length > 0 && (
         <div class="location-directions">
-          <h3>Directions</h3>
+          <h3>{routeLabel ?? 'Directions'}</h3>
           <ol class="location-steps">
             {steps.map((step) => (
               <li>{step}</li>
@@ -59,6 +68,7 @@ const links = [
 
     <div class="location-actions">
       <h3 class="location-actions-heading">Get directions</h3>
+      {searchNote && <p class="location-search-note">{searchNote}</p>}
       <ul class="location-links">
         {links.map((link) => (
           <li>
@@ -147,6 +157,12 @@ const links = [
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 0.1875rem;
+  }
+
+  .location-search-note {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
   }
 
   .location-note {

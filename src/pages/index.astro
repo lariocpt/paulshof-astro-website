@@ -2,25 +2,39 @@
 import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PropertyHero from '../components/PropertyHero.astro';
+import GallerySection from '../components/GallerySection.astro';
 import Prose from '../components/Prose.astro';
+import GuestFeedback from '../components/GuestFeedback.astro';
+import LocationPanel from '../components/LocationPanel.astro';
 import BookingCallToAction from '../components/BookingCallToAction.astro';
 import { site } from '../site';
-import { heroPhoto } from '../data/photography';
+import { heroPhoto, photoGroups } from '../data/photography';
+import { featuredGuestQuotes } from '../data/guestbook';
+import {
+  directionsRouteLabel,
+  directionsSearchNote,
+  directionsSteps,
+} from '../data/directions';
 
-// The house, in the hosts' own words, opened on one real photograph of it. Photography and
-// the gallery / guest-book teasers grow with the routes they point at; what is here now is
-// the text that was published on the previous home page, unembellished, and the single
-// bedroom frame large enough to carry a hero without upscaling.
+// The house, in the hosts' own words: one real photograph opens it, the grounds give a
+// look around, the prose and directions are the property's published sentences, and the
+// guest quotations are verbatim from the previous site. The gallery / guest-book previews
+// are visual for now — they point at their own routes once those pages are migrated, so no
+// link here can resolve to a page that does not yet exist.
 const intro = await getEntry('pages', 'home');
 if (!intro) throw new Error('Missing content: src/content/pages/home.mdx');
 
-const blockIds = ['rooms', 'breakfast', 'location'] as const;
-
+const blockIds = ['rooms', 'breakfast'] as const;
 const blocks = (
   await getCollection('prose', ({ id }) =>
     blockIds.includes(id as (typeof blockIds)[number]),
   )
 ).sort((a, b) => a.data.order - b.data.order);
+
+const grounds = photoGroups.find(
+  (group) => group.id === 'exterior-and-gardens',
+);
+const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
 ---
 
 <Layout
@@ -43,11 +57,26 @@ const blocks = (
     </a>
   </PropertyHero>
 
+  {grounds && <GallerySection group={grounds} limit={4} />}
+
   <div>
     {blocks.map((block) => (
       <Prose entry={block} />
     ))}
   </div>
+
+  {roomsGroup && (
+    <GallerySection group={roomsGroup} limit={3} headingLevel="h2" />
+  )}
+
+  <GuestFeedback heading="What guests say" quotes={featuredGuestQuotes} />
+
+  <LocationPanel
+    heading="Where to find us"
+    steps={directionsSteps}
+    routeLabel={directionsRouteLabel}
+    searchNote={directionsSearchNote}
+  />
 
   <section
     class="home-booking container-page"
