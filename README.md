@@ -78,12 +78,12 @@ destination's static HTML and swap the document content without a full reload.
 Every route remains directly accessible, and real links work without JavaScript.
 This needs neither an SSR adapter nor a catch-all redirect.
 
-Processed scripts run once per browser document. Theme controls, mobile navigation,
-reveals and the demo form initialize on `astro:page-load`; outgoing listeners,
-observers and timers are cleaned up on `astro:before-swap`. The incoming document
-receives the current theme before swap, including choices held only in memory
-when local storage is unavailable. Navigation markup is replaced so active links
-and accessible names reflect the new route. No UI is persisted by default.
+Processed scripts run once per browser document. Mobile navigation, reveals and the
+demo form initialize on `astro:page-load`; outgoing listeners, observers and timers are
+cleaned up on `astro:before-swap`. The head-initialisation script re-applies `data-js`
+to the incoming document before swap, so revealed content never repaints as hidden.
+Navigation markup is replaced so active links and accessible names reflect the new
+route. No UI is persisted by default.
 
 Use `data-astro-reload` for links and forms that require normal document navigation.
 The demo contact form uses it to avoid router interception, and its own handler
@@ -130,12 +130,12 @@ Rendered checks cover every HTML route, IDs and internal links, heading order,
 one primary landmark and heading, metadata, image dimensions/alt, and required
 artifacts. They do not replace keyboard, screen-reader, contrast, or visual testing.
 Check at 320 CSS pixels, 200% text enlargement, increased browser font settings,
-light/dark/system themes, reduced motion, and with JavaScript disabled. Without
+reduced motion, and with JavaScript disabled. Without
 JavaScript the content and navigation remain available; demo submission stays
 disabled rather than posting personal information into a URL.
 
 In a production preview, test A→B→A, direct nested-route loads, Back/Forward,
-hash/query URLs, theme continuity, updated titles/canonicals and active links,
+hash/query URLs, reveal and scroll behaviour, updated titles/canonicals and active links,
 and repeated use of navigation controls and the contact form. Confirm page swaps
 actually occur without reloads, with no duplicate handlers or CSP violations.
 
@@ -150,7 +150,7 @@ optional delivery optimizations: the ordinary files are always present.
 Vite 8/Oxc minifies and tree shakes JavaScript while preserving side effects;
 Lightning CSS minifies split stylesheets. Production source maps are disabled.
 `optimize-html.mjs` removes HTML comments, conservatively collapses whitespace,
-and minifies the synchronous theme script. Local stylesheets below 4 KiB are
+and minifies the synchronous head-initialisation script. Local stylesheets below 4 KiB are
 inlined when they have no URL/import references or integrity constraints; larger
 shared CSS stays externally cacheable. This is independent of
 `assetsInlineLimit: 0`, which keeps processed modules external for ClientRouter.
@@ -171,8 +171,8 @@ Keep stable-name files out of `/_astro/` so changed content always gets a new UR
 
 Astro's built-in `security.csp` does not support `ClientRouter`. This starter
 uses a custom static-build integration in `scripts/csp-head.mjs` instead. It hashes
-the final inline script/style bytes across all HTML pages, including the theme
-initializer and JSON-LD, then inserts the same policy at the start of every head,
+the final inline script/style bytes across all HTML pages, including the
+head-initialisation script and JSON-LD, then inserts the same policy at the start of every head,
 including the 404, before compression. A build-wide allowlist matters because a
 page swap retains the original document's policy: resources from destination
 routes must already be authorized. This permits the build's authored inline code
@@ -215,8 +215,10 @@ divider live with their owning components. Consume shared spacing and color
 tokens instead of scattering design values. Keep breakpoints and one-off
 geometry local when they express component behavior.
 
-Dark and system themes override the same variables; no per-component dark palette
-is needed. Stylelint rejects literal component colors and invalid CSS, and
+The site ships one theme: the palette is the brand, and a second theme would double
+every contrast decision, so no per-component dark palette exists. Adding one would mean
+adding values to the global roles, never literals in a component. Stylelint rejects
+literal component colors and invalid CSS, and
 Prettier formats native CSS and Astro markup without competing ESLint rules.
 
 ## Crawler access

@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../site';
 import NavLinks from './NavLinks.astro';
 import icon from '../assets/brand/mark.svg';
@@ -30,7 +29,6 @@ import icon from '../assets/brand/mark.svg';
     <NavLinks class="nav-links" />
 
     <div class="nav-end">
-      <ThemeToggle />
       <a class="btn btn-primary nav-cta" href="/contact/">
         {site.ui.contact}
       </a>

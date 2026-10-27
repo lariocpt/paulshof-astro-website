@@ -10,7 +10,7 @@ export const site = {
   locale: 'en',
   localeOg: 'en_US',
   indexable: process.env.SITE_INDEXABLE === 'true',
-  theme: { light: '#f8fafc', dark: '#101827', accent: '#3730a3' },
+  theme: { light: '#faf6ef', accent: '#7d252b' },
   ui: {
     contact: 'View the contact example',
     approach: 'Explore the approach',
