@@ -1,0 +1,116 @@
+---
+import { site, navItems } from '../site';
+import BookingCallToAction from './BookingCallToAction.astro';
+
+// Shared identity, contact data and routes. Nothing here depends on which page rendered
+// it, and there is no copyright year: the previous footer printed "(C) 2018" for years and
+// went stale on its own, so the identity line carries no date to fall out of date.
+---
+
+<footer class="site-footer">
+  <div class="container-page footer-inner">
+    <div class="footer-identity">
+      <p class="footer-name">{site.name}</p>
+      <p class="footer-descriptor">{site.ui.footer}</p>
+    </div>
+
+    <div class="footer-block">
+      <h2 class="footer-heading">Find us</h2>
+      <address class="footer-address">
+        {site.address.first}
+        <br />
+        {site.address.locality}, {site.address.city} {site.address.postalCode}
+      </address>
+      <ul class="footer-contacts">
+        <li>
+          <a href={site.phone.href}>{site.phone.label}</a>
+        </li>
+        <li>
+          <a href={site.mobile.href}>{site.mobile.full}</a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-block">
+      <h2 class="footer-heading">Pages</h2>
+      <ul class="footer-links">
+        {navItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div class="footer-booking">
+        <BookingCallToAction />
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-block-start: var(--border-strong) solid var(--color-accent-ink);
+    margin-block-start: auto;
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-8) var(--space-10);
+    padding-block: var(--space-12) var(--space-14);
+  }
+
+  .footer-name {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-title-sm);
+    color: var(--color-accent-ink);
+  }
+
+  .footer-descriptor {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .footer-heading {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-xs);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .footer-address {
+    font-style: normal;
+    margin: 0 0 var(--space-4);
+    overflow-wrap: anywhere;
+  }
+
+  .footer-contacts,
+  .footer-links {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-body-sm);
+  }
+
+  .footer-contacts a,
+  .footer-links a {
+    color: var(--color-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  .footer-booking {
+    padding-block-start: var(--space-6);
+  }
+</style>

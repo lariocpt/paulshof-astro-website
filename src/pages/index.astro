@@ -1,34 +1,80 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
-import StackBand from '../components/StackBand.astro';
-import OutcomeStats from '../components/OutcomeStats.astro';
-import ServiceList from '../components/ServiceList.astro';
-import PullQuote from '../components/PullQuote.astro';
-import PosterCTA from '../components/PosterCTA.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Prose from '../components/Prose.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
 import { site } from '../site';
 
-const hero = await getEntry('pages', 'hero');
-if (!hero) throw new Error('Missing content: src/content/pages/hero.mdx');
+// The house, in the hosts' own words. Photography joins this page in the next phase; what
+// is here now is the text that was published on the previous home page, unembellished.
+const intro = await getEntry('pages', 'home');
+if (!intro) throw new Error('Missing content: src/content/pages/home.mdx');
+
+const blockIds = ['rooms', 'breakfast', 'location'] as const;
+
+const blocks = (
+  await getCollection('prose', ({ id }) =>
+    blockIds.includes(id as (typeof blockIds)[number]),
+  )
+).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Home" description={site.description}>
-  <Hero entry={hero} />
+<Layout title="Home" description={intro.data.description}>
+  <PageHeader entry={intro} />
 
-  <Section id="stack" eyebrow="How the starter is organized">
-    <StackBand />
-  </Section>
+  <div>
+    {blocks.map((block) => (
+      <Prose entry={block} />
+    ))}
+  </div>
 
-  <Section id="outcomes" eyebrow="The foundations">
-    <OutcomeStats />
-  </Section>
-
-  <Section id="services" eyebrow="Example services">
-    <ServiceList />
-  </Section>
-
-  <PullQuote />
-  <PosterCTA />
+  <section
+    class="home-booking container-page"
+    aria-labelledby="home-booking-heading"
+  >
+    <div class="home-booking-inner">
+      <h2 id="home-booking-heading">Book your stay</h2>
+      <BookingCallToAction context="Join us for a relaxing memorable stay in our large well equipped and appointed rooms." />
+      <p class="home-booking-call">
+        Or phone
+        <a href={site.phone.href}>{site.phone.label}</a> — {site.mobile.full}.
+      </p>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .home-booking {
+    padding-block: var(--space-14) var(--space-22);
+  }
+
+  .home-booking-inner {
+    border-block-start: var(--border-strong) solid var(--color-divider);
+    padding-block-start: var(--space-8);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .home-booking h2 {
+    margin-block-end: var(--space-5);
+    color: var(--color-accent-ink);
+  }
+
+  .home-booking-call {
+    margin-block-start: var(--space-5);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .home-booking-call a {
+    color: var(--color-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  @media (max-width: 45rem) {
+    .home-booking {
+      padding-block: var(--space-10) var(--space-16);
+    }
+  }
+</style>

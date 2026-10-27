@@ -1,0 +1,110 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
+import { site } from '../site';
+
+const intro = await getEntry('pages', 'contact-us');
+if (!intro)
+  throw new Error('Missing content: src/content/pages/contact-us.mdx');
+
+// Every value is the property's own, read from site.ts so a change happens once.
+// The mobile is stored as a term and a number for exactly this kind of split.
+const details = [
+  { term: 'Hosts', detail: site.hosts },
+  { term: 'Telephone', detail: site.phone.label, href: site.phone.href },
+  {
+    term: site.mobile.term,
+    detail: site.mobile.display,
+    href: site.mobile.href,
+  },
+  { term: 'Email', detail: site.email, href: `mailto:${site.email}` },
+  { term: 'Address', detail: site.address.full },
+];
+---
+
+<Layout
+  title="Contact Us"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Contact Us', href: '/contact-us/' }]}
+>
+  <PageHeader entry={intro} />
+
+  <section
+    class="contact-block container-page"
+    aria-labelledby="contact-details-heading"
+  >
+    <h2 id="contact-details-heading">Contact details</h2>
+    <dl class="contact-list">
+      {details.map((row) => (
+        <div class="contact-row">
+          <dt>{row.term}</dt>
+          <dd>{row.href ? <a href={row.href}>{row.detail}</a> : row.detail}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="contact-booking">
+      <BookingCallToAction context="Bookings are also taken through the online booking page." />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .contact-block {
+    padding-block: var(--space-10) var(--space-22);
+  }
+
+  .contact-block h2 {
+    margin-block-end: var(--space-6);
+    color: var(--color-accent-ink);
+  }
+
+  .contact-list {
+    margin: 0;
+    padding: 0;
+    max-inline-size: 44ch;
+  }
+
+  .contact-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, auto) 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-3);
+    border-block-end: var(--border-width) solid var(--color-divider);
+  }
+
+  .contact-row dt {
+    font-size: var(--text-body-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .contact-row dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-row a {
+    color: var(--color-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  .contact-booking {
+    padding-block-start: var(--space-10);
+  }
+
+  @media (max-width: 45rem) {
+    .contact-block {
+      padding-block: var(--space-8) var(--space-16);
+    }
+
+    .contact-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import { site } from '../site';
+
+// The booking action, given one treatment so it is not restyled page by page.
+//
+// The destination is the property's own booking engine. This component deliberately has no
+// behaviour of its own: it does not check availability, hold dates, or imply a confirmed
+// price, because it has no way to know any of those things.
+
+interface Props {
+  label?: string;
+  href?: string;
+  /** Short line beside the button, for the page that needs to say where it goes. */
+  context?: string;
+  variant?: 'primary' | 'secondary';
+  class?: string;
+}
+
+const {
+  label = site.booking.label,
+  href = site.booking.href,
+  context,
+  variant = 'primary',
+  class: className,
+} = Astro.props;
+---
+
+<a
+  class:list={[
+    'btn',
+    variant === 'primary' ? 'btn-primary' : 'btn-secondary',
+    'booking-cta',
+    className,
+  ]}
+  href={href}
+>
+  {label}
+</a>
+{context && (
+  <p class="booking-note" data-reveal>
+    {context}
+  </p>
+)}
+
+<style>
+  .booking-note {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    max-inline-size: 46ch;
+  }
+</style>

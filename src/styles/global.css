@@ -322,8 +322,14 @@ p {
   text-wrap: pretty;
 }
 
+/*
+ * Text links are underlined by default, and the components that are not text links — nav,
+ * the wordmark, buttons, the skip link — say so themselves. Inverting the two would leave
+ * body-copy links identified by colour alone, which is the thing WCAG 1.4.1 asks for a
+ * second cue on, and it is easy to write a new component that quietly relies on the default.
+ */
 a {
-  text-decoration: none;
+  text-decoration: underline;
   color: var(--color-accent-ink);
   text-underline-offset: 0.1875rem;
 }

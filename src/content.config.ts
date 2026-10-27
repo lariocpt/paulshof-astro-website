@@ -7,91 +7,6 @@ const mdx = (dir: string) =>
 
 const ordered = { order: z.number().int() };
 
-const services = defineCollection({
-  loader: mdx('services'),
-  schema: z.object({
-    ...ordered,
-    num: z.string(),
-    title: z.string(),
-    engagement: z.enum(['Fixed scope', 'Monthly', 'Retainer', 'Setup']),
-    summary: z.string(),
-  }),
-});
-
-const cases = defineCollection({
-  loader: mdx('cases'),
-  schema: z.object({
-    ...ordered,
-    sector: z.string(),
-    title: z.string(),
-    stack: z.string(),
-  }),
-});
-
-const projects = defineCollection({
-  loader: mdx('projects'),
-  schema: z.object({
-    ...ordered,
-    name: z.string(),
-    kind: z.string(),
-    stack: z.string(),
-
-    links: z.array(z.object({ label: z.string(), href: z.url() })).optional(),
-  }),
-});
-
-const tools = defineCollection({
-  loader: mdx('tools'),
-  schema: z.object({
-    ...ordered,
-    name: z.string(),
-    /** Three or four words, sits beside the name rather than under it. */
-    kind: z.string(),
-    licence: z.string(),
-    /** What the link is — "docs" for a manual, "site" for a landing page. */
-    label: z.string(),
-    href: z.url(),
-  }),
-});
-
-const career = defineCollection({
-  loader: mdx('career'),
-  schema: z.object({
-    ...ordered,
-    years: z.string(),
-    /** Machine-readable start year for <time datetime>. */
-    startYear: z.number().int(),
-    role: z.string(),
-    org: z.string(),
-  }),
-});
-
-const outcomes = defineCollection({
-  loader: mdx('outcomes'),
-  schema: z.object({
-    ...ordered,
-    figure: z.string(),
-    label: z.string(),
-    /** Only set where the figure is a plain number that can be counted up to. */
-    countTo: z.number().optional(),
-  }),
-});
-
-const stack = defineCollection({
-  loader: mdx('stack'),
-  schema: z.object({ ...ordered, area: z.string() }),
-});
-
-const process = defineCollection({
-  loader: mdx('process'),
-  schema: z.object({ ...ordered, day: z.string() }),
-});
-
-const principles = defineCollection({
-  loader: mdx('principles'),
-  schema: z.object({ ...ordered, title: z.string() }),
-});
-
 const pages = defineCollection({
   loader: mdx('pages'),
   schema: z.object({
@@ -103,15 +18,22 @@ const pages = defineCollection({
   }),
 });
 
+/**
+ * Long-form editorial body: the property's own sentences about rates, directions and so
+ * on. The heading lives in the entry because the page outline is content, and `level` is
+ * a field rather than a guess because a block under the page h1 must not jump to h3.
+ */
+const prose = defineCollection({
+  loader: mdx('prose'),
+  schema: z.object({
+    ...ordered,
+    heading: z.string(),
+    level: z.union([z.literal(2), z.literal(3)]).default(2),
+    note: z.string().optional(),
+  }),
+});
+
 export const collections = {
-  services,
-  cases,
-  projects,
-  tools,
-  career,
-  outcomes,
-  stack,
-  process,
-  principles,
+  prose,
   pages,
 };

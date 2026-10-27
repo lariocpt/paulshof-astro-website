@@ -1,18 +1,20 @@
 ---
 import { navItems } from '../site';
+
+// One ordered route list, shared by the header strip, the mobile sheet and the footer, so
+// "current page" is computed the same way everywhere. Entries exist only for routes that
+// are actually built, which the built-output check enforces link by link.
+
 interface Props {
   class?: string;
-  includeContact?: boolean;
 }
-const { class: className, includeContact = false, ...rest } = Astro.props;
+
+const { class: className, ...rest } = Astro.props;
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const items = includeContact
-  ? [...navItems, { label: 'Contact', href: '/contact/' }]
-  : navItems;
 ---
 
 <ul class={className} {...rest}>
-  {items.map((item) => (
+  {navItems.map((item) => (
     <li>
       <a
         href={item.href}

@@ -1,0 +1,74 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Prose from '../components/Prose.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
+
+// The rates page publishes no numbers, because the property never published any: it sends
+// guests to the booking page for current rates and specials. What can be stated honestly
+// is what a stay includes, the terms that apply, and the cancellation policy.
+const intro = await getEntry('pages', 'rates');
+if (!intro) throw new Error('Missing content: src/content/pages/rates.mdx');
+
+// Listed by id rather than taken wholesale, so a prose block written for another page
+// cannot appear here by accident.
+const blockIds = [
+  'self-catering',
+  'monthly',
+  'terms',
+  'cancellation',
+  'enquiries',
+] as const;
+
+const blocks = (
+  await getCollection('prose', ({ id }) =>
+    blockIds.includes(id as (typeof blockIds)[number]),
+  )
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title="Rates"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Rates', href: '/rates/' }]}
+>
+  <PageHeader entry={intro} />
+  <div>
+    {blocks.map((block) => (
+      <Prose entry={block} />
+    ))}
+  </div>
+  <section
+    class="rates-booking container-page"
+    aria-labelledby="rates-booking-heading"
+  >
+    <div class="rates-booking-inner">
+      <h2 id="rates-booking-heading">Check availability</h2>
+      <BookingCallToAction context="Current rates and any special are shown on the booking page." />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .rates-booking {
+    padding-block: var(--space-14) var(--space-22);
+  }
+
+  .rates-booking-inner {
+    border-block-start: var(--border-strong) solid var(--color-divider);
+    padding-block-start: var(--space-8);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .rates-booking h2 {
+    margin-block-end: var(--space-5);
+    color: var(--color-accent-ink);
+  }
+
+  @media (max-width: 45rem) {
+    .rates-booking {
+      padding-block: var(--space-10) var(--space-16);
+    }
+  }
+</style>
