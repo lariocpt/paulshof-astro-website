@@ -1,0 +1,11 @@
+# Route disposition for pages the previous site published, per the implementation
+# handoff §7. Targets are built routes; these only take effect on an authorized deploy,
+# which is gated behind launch (indexing/robots stay off until then).
+#
+#   /767-2/        the empty-slug testimonials page — consolidated into /guest-book/
+#   /v-tours/      the duplicate tour route — one canonical /virtual-tours/ (Phase 6)
+#   /hello-world/  the WordPress-default slug for the Soweto post — re-slugged (Phase 6)
+
+/767-2/       /guest-book/          301
+/v-tours/     /virtual-tours/       301
+/hello-world/ /soweto/              301
