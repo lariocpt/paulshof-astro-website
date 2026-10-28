@@ -1,5 +1,14 @@
 ---
 import { site } from '../site';
+
+// A demo enquiry form, kept exactly as honest as the starter's.
+//
+// There is no handler behind it, so it never claims otherwise: the submit control ships
+// disabled and is only enabled once JavaScript is running, its own submit handler cancels
+// the event and writes a status line, and the form carries `data-astro-reload` so the
+// client router cannot intercept it. With no `action` and submission cancelled, no field
+// can leak into a URL. Reaching the property still means the phone number and the email,
+// which the surrounding panel prints and which the note repeats.
 ---
 
 <form
@@ -32,15 +41,11 @@ import { site } from '../site';
     />
   </div>
   <div class="field">
-    <label for="contact-budget">{site.ui.budget}</label>
-    <input class="input" id="contact-budget" name="budget" type="text" />
-  </div>
-  <div class="field">
-    <label for="contact-brief">{site.ui.brief}</label>
+    <label for="contact-message">{site.ui.message}</label>
     <textarea
       class="input"
-      id="contact-brief"
-      name="brief"
+      id="contact-message"
+      name="message"
       rows="6"
       required
     ></textarea>
@@ -48,50 +53,76 @@ import { site } from '../site';
   <button class="btn btn-primary" type="submit" disabled data-demo-submit>
     {site.ui.submit}
   </button>
-  <p id="contact-note">{site.ui.formNote}</p>
+  <p id="contact-note" class="form-note">
+    {site.ui.formNote}
+  </p>
   <p role="status" data-form-status></p>
   <noscript>
     <p>
-      Enable JavaScript to preview the example submission. No message is sent.
+      Enable JavaScript to preview the enquiry form. Nothing is sent without it,
+      and nothing is ever sent by this form.
     </p>
   </noscript>
 </form>
+
 <style>
+  .contact-form {
+    max-inline-size: 40rem;
+  }
+
+  .field {
+    margin-block-end: var(--space-4);
+  }
+
+  .field label {
+    display: block;
+    margin-block-end: var(--space-one-half);
+    font-size: var(--text-body-sm);
+    font-weight: 700;
+  }
+
   .input {
-    width: 100%;
-    min-height: 2.5rem;
+    inline-size: 100%;
+    min-block-size: 2.5rem;
     padding: var(--space-2) var(--space-3);
     font: inherit;
     font-size: var(--text-body-sm);
     color: var(--color-text);
-    caret-color: var(--color-accent);
-    background: var(--color-surface);
+    caret-color: var(--color-accent-ink);
+    background: var(--color-field);
     border: var(--border-width) solid var(--color-divider);
     border-radius: var(--radius-md);
   }
-  .contact-form {
-    max-width: 40rem;
-  }
-  .field {
-    margin-block-end: var(--space-4);
-  }
-  label {
-    display: block;
-    margin-block-end: var(--space-one-half);
-  }
-  textarea {
+
+  textarea.input {
     resize: vertical;
-    min-height: 8rem;
+    min-block-size: 8rem;
   }
-  p {
+
+  .form-note {
     margin-block: var(--space-4) 0;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    max-inline-size: var(--measure-prose);
   }
-  [role='status']:empty {
+
+  .contact-form [role='status'] {
+    margin-block: var(--space-4) 0;
+    font-weight: 700;
+    color: var(--color-secondary-ink);
+  }
+
+  .contact-form [role='status']:empty {
     display: none;
   }
 </style>
+
 <script>
+  // Mirrors the starter contract: enable only with scripting, cancel the send, report the
+  // demo outcome. Re-wired on every page swap and aborted on the way out so a swap cannot
+  // leave two handlers on the same form.
   let listeners: AbortController | undefined;
+
   function wireForms() {
     listeners?.abort();
     listeners = new AbortController();
@@ -114,6 +145,7 @@ import { site } from '../site';
       button.disabled = false;
     }
   }
+
   document.addEventListener('astro:before-swap', () => listeners?.abort());
   document.addEventListener('astro:page-load', wireForms);
 </script>

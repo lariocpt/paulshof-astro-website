@@ -1,0 +1,54 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import GuestFeedback from '../components/GuestFeedback.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
+import { guestQuotes } from '../data/guestbook';
+
+// The guest book. This route consolidates the previous site's testimonial page (/767-2/,
+// which shared its heading and had an empty-slug title): one canonical page, one h1. The
+// quotations are the guests' own words, reproduced as written. There is no review widget, no
+// aggregate score and no review schema — the old Trustindex embed was dropped, and inventing
+// a rating to replace it would be a fabricated fact.
+const intro = await getEntry('pages', 'guest-book');
+if (!intro)
+  throw new Error('Missing content: src/content/pages/guest-book.mdx');
+
+const quotes = guestQuotes.map((quote) => quote.text);
+---
+
+<Layout
+  title="Guest Book"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Guest Book', href: '/guest-book/' }]}
+>
+  <PageHeader entry={intro} />
+  <GuestFeedback heading="From the guest book" quotes={quotes} />
+  <section
+    class="guest-book-cta container-page"
+    aria-labelledby="guest-book-cta-heading"
+  >
+    <div class="guest-book-cta-inner">
+      <h2 id="guest-book-cta-heading">Come and stay</h2>
+      <BookingCallToAction context="Bookings are also taken through the online booking page." />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .guest-book-cta {
+    padding-block: var(--space-6) var(--space-20);
+  }
+
+  .guest-book-cta-inner {
+    border-block-start: var(--border-strong) solid var(--color-divider);
+    padding-block-start: var(--space-8);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .guest-book-cta h2 {
+    margin-block-end: var(--space-5);
+    color: var(--color-accent-ink);
+  }
+</style>

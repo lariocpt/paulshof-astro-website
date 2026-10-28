@@ -1,0 +1,60 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+
+// Long-form body from a `prose` entry, in a readable measure.
+//
+// The heading comes from the entry, so an outline edit is a content edit rather than a
+// component edit. Lists are re-marked deliberately: the reset in global.css removes
+// markers from every list, and a prose list without them stops being a list to a
+// screen reader that relies on markup rather than visuals.
+
+interface Props {
+  entry: CollectionEntry<'prose'>;
+  /** Anchor target. Defaults to the entry id, which is unique per file. */
+  id?: string;
+}
+
+const { entry, id } = Astro.props;
+const anchor = id ?? entry.id;
+const { Content } = await render(entry);
+const Heading = `h${entry.data.level}` as 'h2' | 'h3';
+---
+
+<section class="prose-block" id={anchor} aria-labelledby={`${anchor}-heading`}>
+  <div class="container-page">
+    <Heading id={`${anchor}-heading`} class="prose-heading" data-reveal>
+      {entry.data.heading}
+    </Heading>
+    {entry.data.note && (
+      <p class="prose-note" data-reveal data-reveal-delay="60ms">
+        {entry.data.note}
+      </p>
+    )}
+    <div class="prose" data-reveal data-reveal-delay="120ms">
+      <Content />
+    </div>
+  </div>
+</section>
+
+<style>
+  .prose-block {
+    padding-block: var(--space-10);
+  }
+
+  .prose-heading {
+    margin: 0 0 var(--space-4);
+    color: var(--color-accent-ink);
+  }
+
+  .prose-note {
+    margin: 0 0 var(--space-5);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 45rem) {
+    .prose-block {
+      padding-block: var(--space-8);
+    }
+  }
+</style>

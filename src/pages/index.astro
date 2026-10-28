@@ -1,34 +1,151 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
-import StackBand from '../components/StackBand.astro';
-import OutcomeStats from '../components/OutcomeStats.astro';
-import ServiceList from '../components/ServiceList.astro';
-import PullQuote from '../components/PullQuote.astro';
-import PosterCTA from '../components/PosterCTA.astro';
+import PropertyHero from '../components/PropertyHero.astro';
+import GallerySection from '../components/GallerySection.astro';
+import Prose from '../components/Prose.astro';
+import GuestFeedback from '../components/GuestFeedback.astro';
+import LocationPanel from '../components/LocationPanel.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
 import { site } from '../site';
+import { heroPhoto, photoGroups } from '../data/photography';
+import { featuredGuestQuotes } from '../data/guestbook';
+import {
+  directionsRouteLabel,
+  directionsSearchNote,
+  directionsSteps,
+} from '../data/directions';
 
-const hero = await getEntry('pages', 'hero');
-if (!hero) throw new Error('Missing content: src/content/pages/hero.mdx');
+// The house, in the hosts' own words: one real photograph opens it, the grounds give a
+// look around, the prose and directions are the property's published sentences, and the
+// guest quotations are verbatim from the previous site. The gallery / guest-book previews
+// are visual for now — they point at their own routes once those pages are migrated, so no
+// link here can resolve to a page that does not yet exist.
+const intro = await getEntry('pages', 'home');
+if (!intro) throw new Error('Missing content: src/content/pages/home.mdx');
+
+const blockIds = ['rooms', 'breakfast'] as const;
+const blocks = (
+  await getCollection('prose', ({ id }) =>
+    blockIds.includes(id as (typeof blockIds)[number]),
+  )
+).sort((a, b) => a.data.order - b.data.order);
+
+const grounds = photoGroups.find(
+  (group) => group.id === 'exterior-and-gardens',
+);
+const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
 ---
 
-<Layout title="Home" description={site.description}>
-  <Hero entry={hero} />
+<Layout
+  title="Home"
+  description={intro.data.description}
+  image={heroPhoto.image}
+  imageAlt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
+>
+  <PropertyHero
+    image={heroPhoto.image}
+    alt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
+    eyebrow={intro.data.eyebrow}
+    title={intro.data.heading}
+    lead={intro.body}
+    sizes="(min-width: 60rem) 50vw, 100vw"
+  >
+    <BookingCallToAction />
+    <a class="btn btn-secondary hero-rates" href="/rates/">
+      Rates and what's included
+    </a>
+  </PropertyHero>
 
-  <Section id="stack" eyebrow="How the starter is organized">
-    <StackBand />
-  </Section>
+  {grounds && <GallerySection group={grounds} limit={4} moreHref="/gallery/" />}
 
-  <Section id="outcomes" eyebrow="The foundations">
-    <OutcomeStats />
-  </Section>
+  <div>
+    {blocks.map((block) => (
+      <Prose entry={block} />
+    ))}
+  </div>
 
-  <Section id="services" eyebrow="Example services">
-    <ServiceList />
-  </Section>
+  {roomsGroup && (
+    <GallerySection
+      group={roomsGroup}
+      limit={3}
+      headingLevel="h2"
+      moreHref="/gallery/"
+    />
+  )}
 
-  <PullQuote />
-  <PosterCTA />
+  <GuestFeedback heading="What guests say" quotes={featuredGuestQuotes} />
+
+  <div class="guest-book-link container-page">
+    <a href="/guest-book/">Read more from our guest book</a>
+  </div>
+
+  <LocationPanel
+    heading="Where to find us"
+    steps={directionsSteps}
+    routeLabel={directionsRouteLabel}
+    searchNote={directionsSearchNote}
+  />
+
+  <section
+    class="home-booking container-page"
+    aria-labelledby="home-booking-heading"
+  >
+    <div class="home-booking-inner">
+      <h2 id="home-booking-heading">Book your stay</h2>
+      <BookingCallToAction context="Join us for a relaxing memorable stay in our large well equipped and appointed rooms." />
+      <p class="home-booking-call">
+        Or phone
+        <a href={site.phone.href}>{site.phone.label}</a> — {site.mobile.full}.
+      </p>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .hero-rates {
+    text-decoration: none;
+  }
+
+  .guest-book-link {
+    padding-block: var(--space-8) 0;
+  }
+
+  .guest-book-link a {
+    color: var(--color-accent-ink);
+    font-weight: 700;
+  }
+
+  .home-booking {
+    padding-block: var(--space-14) var(--space-22);
+  }
+
+  .home-booking-inner {
+    border-block-start: var(--border-strong) solid var(--color-divider);
+    padding-block-start: var(--space-8);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .home-booking h2 {
+    margin-block-end: var(--space-5);
+    color: var(--color-accent-ink);
+  }
+
+  .home-booking-call {
+    margin-block-start: var(--space-5);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .home-booking-call a {
+    color: var(--color-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  @media (max-width: 45rem) {
+    .home-booking {
+      padding-block: var(--space-10) var(--space-16);
+    }
+  }
+</style>

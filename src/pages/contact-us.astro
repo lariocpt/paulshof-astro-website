@@ -1,0 +1,23 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactPanel from '../components/ContactPanel.astro';
+
+// The contact route is the property's phone, mobile, email and address, the booking link,
+// and a demo enquiry form. The form is labelled a preview and cannot send: it exists so the
+// page matches the old site's layout, and the details above it are the ones that actually
+// reach Nicki or Mary.
+const intro = await getEntry('pages', 'contact-us');
+if (!intro)
+  throw new Error('Missing content: src/content/pages/contact-us.mdx');
+---
+
+<Layout
+  title="Contact Us"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Contact Us', href: '/contact-us/' }]}
+>
+  <PageHeader entry={intro} />
+  <ContactPanel heading="Contact details" />
+</Layout>

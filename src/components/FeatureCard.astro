@@ -1,0 +1,59 @@
+---
+// One card in a feature grid. It renders whatever heading level the surrounding outline
+// needs so a page never has to fudge heading order to reuse it (defect 10 and 11 are both
+// "heading level jumps", so the level is a prop, not a hard-coded tag).
+//
+// The optional `href` turns the whole card into a single link; a nested anchor and a card
+// link are two tab stops for the same destination, so they are never both present.
+
+interface Props {
+  title: string;
+  body: string;
+  href?: string;
+  hrefLabel?: string;
+  as?: 'h2' | 'h3' | 'h4';
+}
+
+const { title, body, href, hrefLabel = 'Learn more', as = 'h3' } = Astro.props;
+const Heading = `h${as.slice(1)}` as 'h2' | 'h3' | 'h4';
+---
+
+<article class="feature-card">
+  <Heading class="feature-title">{title}</Heading>
+  <p class="feature-body">{body}</p>
+  {href && (
+    <a class="feature-link" href={href}>
+      {hrefLabel}
+    </a>
+  )}
+</article>
+
+<style>
+  .feature-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    block-size: 100%;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border-block-start: var(--border-strong) solid var(--color-accent-ink);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-title {
+    margin: 0;
+    color: var(--color-accent-ink);
+  }
+
+  .feature-body {
+    margin: 0;
+    line-height: var(--leading-prose);
+  }
+
+  .feature-link {
+    margin-block-start: auto;
+    font-weight: 700;
+    font-size: var(--text-body-sm);
+    color: var(--color-accent-ink);
+  }
+</style>

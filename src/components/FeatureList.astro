@@ -1,0 +1,77 @@
+---
+import FeatureCard from './FeatureCard.astro';
+
+// A run of feature cards around one section heading. The section owns a single heading and
+// the cards are siblings beneath it, so the outline goes h2 → h3 without a gap no matter how
+// many cards a page passes in.
+
+interface Item {
+  title: string;
+  body: string;
+  href?: string;
+  hrefLabel?: string;
+}
+
+interface Props {
+  heading: string;
+  items: Item[];
+  /** Anchor id for the section (defaults to a slug of the heading). */
+  id?: string;
+}
+
+const { heading, items, id } = Astro.props;
+const anchor =
+  id ??
+  heading
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+---
+
+<section
+  class="feature-list container-page"
+  id={anchor}
+  aria-labelledby={`${anchor}-heading`}
+>
+  <h2 id={`${anchor}-heading`} class="feature-list-heading" data-reveal>
+    {heading}
+  </h2>
+  <ul class="feature-grid">
+    {items.map((item) => (
+      <li class="feature-cell">
+        <FeatureCard {...item} as="h3" />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .feature-list {
+    padding-block: var(--space-12) var(--space-14);
+  }
+
+  .feature-list-heading {
+    margin: 0 0 var(--space-8);
+    color: var(--color-accent-ink);
+    max-inline-size: var(--measure-lead);
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .feature-cell {
+    display: grid;
+  }
+
+  @media (max-width: 45rem) {
+    .feature-list {
+      padding-block: var(--space-10);
+    }
+  }
+</style>

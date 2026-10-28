@@ -1,0 +1,86 @@
+---
+// Verified guest quotations, rendered as plain text. This component carries no stars, no
+// aggregate score, and no review schema: the old site's Trustindex widget was dropped, and
+// inventing a rating or a schema review to replace it would be a fabricated business fact.
+// Only the quotations themselves — which exist in the captured HTML — are shown, and each is
+// a real blockquote so assistive tech reads it as a quotation.
+
+interface Props {
+  heading: string;
+  quotes: string[];
+  id?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { heading, quotes, id, headingLevel = 'h2' } = Astro.props;
+const anchor =
+  id ??
+  heading
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+const Heading = `h${headingLevel.slice(1)}` as 'h2' | 'h3';
+---
+
+<section
+  class="guest-feedback"
+  id={anchor}
+  aria-labelledby={`${anchor}-heading`}
+>
+  <div class="container-page">
+    <Heading
+      id={`${anchor}-heading`}
+      class="guest-feedback-heading"
+      data-reveal
+    >
+      {heading}
+    </Heading>
+    <ul class="quote-grid">
+      {quotes.map((quote) => (
+        <li>
+          <blockquote class="quote">
+            <p>{quote}</p>
+          </blockquote>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .guest-feedback {
+    background: var(--color-surface);
+    padding-block: var(--space-12) var(--space-14);
+  }
+
+  .guest-feedback-heading {
+    margin: 0 0 var(--space-8);
+    color: var(--color-accent-ink);
+    max-inline-size: var(--measure-lead);
+  }
+
+  .quote-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .quote {
+    margin: 0;
+    padding: var(--space-6);
+    background: var(--color-bg);
+    border-inline-start: var(--border-strong) solid var(--color-secondary-ink);
+    border-radius: var(--radius-md);
+  }
+
+  .quote p {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-title-sm);
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+</style>

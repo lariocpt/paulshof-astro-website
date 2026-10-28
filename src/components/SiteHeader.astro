@@ -1,0 +1,394 @@
+---
+import { site } from '../site';
+import NavLinks from './NavLinks.astro';
+import BookingCallToAction from './BookingCallToAction.astro';
+
+// The one frame every page shares: brand, routes, phone, and the booking action.
+//
+// The wordmark is set as type rather than shipped as an image: it stays crisp at 200%
+// text, it speaks to a screen reader as the business name, and it cannot be a low-resolution
+// PNG on a phone. The previous site's masthead lettering collided at 400px, which is the
+// failure this layout is built to avoid.
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#main">
+    Skip to content
+  </a>
+
+  <div class="call-strip">
+    <div class="container-page call-strip-inner">
+      <p class="call-strip-text">{site.ui.callStrip}</p>
+      <a class="call-strip-number" href={site.phone.href}>
+        {site.phone.label}
+      </a>
+    </div>
+  </div>
+
+  <nav class="nav container-page" aria-label="Primary">
+    <a class="brand" href="/" aria-label={`${site.name} — home`}>
+      <span class="brand-word">
+        <span class="brand-word-full">{site.name}</span>
+        <span class="brand-word-short">{site.shortName}</span>
+      </span>
+    </a>
+
+    <NavLinks class="nav-links" />
+
+    <div class="nav-end">
+      <!-- The wrapper, not the button, is what the narrow-width rule hides: a scoped style
+           in this file cannot reach the root element of a child component that carries its
+           own scope, so hiding the child by class would silently do nothing. -->
+      <span class="nav-booking">
+        <BookingCallToAction />
+      </span>
+      <button
+        type="button"
+        class="nav-burger"
+        aria-expanded="false"
+        aria-controls="nav-sheet"
+        aria-label={site.ui.openMenu}
+        data-label-open={site.ui.openMenu}
+        data-label-close={site.ui.closeMenu}
+      >
+        <svg
+          viewBox="0 0 20 20"
+          width="20"
+          height="20"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M2 5h16M2 10h16M2 15h16"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile sheet. Rendered in the DOM rather than injected on open so it is present for
+       assistive tech and works without waiting on JS; `hidden` keeps it out of the tree
+       until it is asked for. -->
+  <div class="nav-sheet" id="nav-sheet" hidden>
+    <NavLinks />
+    <div class="nav-sheet-foot container-page">
+      <BookingCallToAction />
+      <a class="nav-sheet-call" href={site.phone.href}>
+        {site.phone.label}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Opaque: the previous theme laid navigation over translucent grey panels and body
+       copy showing through, which is the legibility problem this replaces. */
+    background: var(--color-bg);
+    border-block-end: var(--border-width) solid var(--color-divider);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: var(--space-2);
+    top: var(--space-2);
+    padding: var(--space-2) 0.875rem;
+    background: var(--color-accent-fill);
+    color: var(--color-accent-on-fill);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  .call-strip {
+    background: var(--color-accent-fill);
+    color: var(--color-accent-on-fill);
+    font-size: var(--text-sm);
+  }
+
+  .call-strip-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+    padding-block: var(--space-2);
+  }
+
+  .call-strip-text {
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .call-strip-number {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-block-size: 4.25rem;
+  }
+
+  .brand {
+    margin-inline-end: auto;
+    color: var(--color-accent-ink);
+    text-decoration: none;
+  }
+
+  .brand-word {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.375rem;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .brand-word-short {
+    display: none;
+  }
+
+  :global(.nav-links) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links :global(a) {
+    position: relative;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--text-body-sm);
+    padding-block: var(--space-1);
+  }
+
+  /* The underline is the same hairline device the page rules use, and it also gives the
+     current page a marker that does not depend on colour alone. */
+  .nav-links :global(a)::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--border-width);
+    background: var(--color-accent-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .nav-links :global(a):hover::after,
+  .nav-links :global(a):focus-visible::after,
+  .nav-links :global(a)[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .nav-links :global(a)[aria-current='page'] {
+    color: var(--color-accent-ink);
+    font-weight: 700;
+  }
+
+  .nav-end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .nav-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    padding: 0;
+    color: var(--color-text);
+    background: transparent;
+    border: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .nav-sheet {
+    border-block-start: var(--border-width) solid var(--color-divider);
+  }
+
+  .nav-sheet :global(ul) {
+    margin: 0;
+    padding: var(--space-2) 0;
+    list-style: none;
+  }
+
+  .nav-sheet :global(a) {
+    display: block;
+    padding: var(--space-3) var(--space-5);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-title-sm);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav-sheet :global(a)[aria-current='page'] {
+    color: var(--color-accent-ink);
+  }
+
+  .nav-sheet-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-5) var(--space-8);
+  }
+
+  .nav-sheet-call {
+    color: var(--color-accent-ink);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  @media (max-width: 80rem) {
+    :global(.nav-links) {
+      display: none;
+    }
+    .nav-burger {
+      display: inline-flex;
+    }
+    .nav-booking {
+      display: none;
+    }
+  }
+
+  @media (max-width: 26.25rem) {
+    .brand-word-full {
+      display: none;
+    }
+    .brand-word-short {
+      display: inline;
+    }
+    .call-strip-text {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .nav-links :global(a)::after {
+      transition: transform 220ms var(--ease-out-quint);
+    }
+
+    .nav-sheet:not([hidden]) {
+      animation: sheet-in 240ms var(--ease-out-quint) both;
+    }
+
+    @keyframes sheet-in {
+      from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
+  /* Without JavaScript the sheet can never be opened, so the routes are shown inline
+     instead - navigation stays available, it just stops being collapsible. */
+  :global(html:not([data-js])) .nav {
+    flex-wrap: wrap;
+  }
+  :global(html:not([data-js]) .nav-links) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  :global(html:not([data-js])) .nav-burger {
+    display: none;
+  }
+  :global(html:not([data-js]) .nav-sheet) {
+    display: none;
+  }
+
+  @media (max-width: 28rem) {
+    .nav {
+      flex-wrap: wrap;
+      padding-block: var(--space-2);
+    }
+    .nav-end {
+      flex-wrap: wrap;
+      min-inline-size: 0;
+    }
+  }
+</style>
+
+<script>
+  let listeners: AbortController | undefined;
+
+  function wireHeader() {
+    listeners?.abort();
+    listeners = new AbortController();
+    const { signal } = listeners;
+    const burger = document.querySelector<HTMLButtonElement>('.nav-burger');
+    const sheet = document.querySelector<HTMLElement>('#nav-sheet');
+    if (!burger || !sheet) return;
+
+    // The labels travel on the button rather than being hardcoded here, so the wording
+    // stays in site.ts with the rest of the shared copy. An inline global would need the
+    // CSP to allow one, which is the trade this avoids.
+    const openLabel = burger.dataset.labelOpen ?? 'Open menu';
+    const closeLabel = burger.dataset.labelClose ?? 'Close menu';
+
+    const setOpen = (open: boolean) => {
+      sheet.hidden = !open;
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? closeLabel : openLabel);
+    };
+
+    burger.addEventListener('click', () => setOpen(sheet.hidden === true), {
+      signal,
+    });
+
+    // Escape closes and returns focus to the control that opened it, otherwise focus is
+    // left on a hidden element and the next Tab starts from the top of the document.
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape' && !sheet.hidden) {
+          setOpen(false);
+          burger.focus();
+        }
+      },
+      { signal },
+    );
+
+    // The sheet is the only navigation below the breakpoint. Resize past it without closing
+    // the sheet and its open state survives: back below the breakpoint the next tap then
+    // *closes* the panel that was never visibly open, so the menu reads as dead until a
+    // refresh resets it. Closing on the way into the desktop width keeps the two states in
+    // step, so the control behaves the same after a resize as after a load. The query mirrors
+    // the header's own `max-width: 80rem` collapse, so it stays correct if that changes.
+    const desktopNav = window.matchMedia('(min-width: 80rem)');
+    const syncOnBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches && !sheet.hidden) setOpen(false);
+    };
+    desktopNav.addEventListener('change', syncOnBreakpoint, { signal });
+  }
+
+  document.addEventListener('astro:before-swap', () => listeners?.abort());
+  document.addEventListener('astro:page-load', wireHeader);
+</script>

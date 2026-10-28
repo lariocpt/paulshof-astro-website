@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import type { Photo } from '../data/photography';
+
+// The single image template every gallery uses. One grid, one responsive image per tile, so
+// the nine gallery groups and the home-page previews are the same markup rather than nine
+// hand-written variants.
+//
+// Alt text is conservative by policy: until a string is owner-reviewed it states only what
+// the group heading and the position in the group imply — never a claim about what is in
+// frame. Every tile still carries a real alt, and every tile reserves its box via the Image
+// component's width and height, so nothing reflows while pictures arrive.
+
+interface Props {
+  photos: Photo[];
+  /** Group label, used as the prefix for sequence-style alt text. */
+  altPrefix: string;
+  sizes?: string;
+}
+
+const {
+  photos,
+  altPrefix,
+  sizes = '(min-width: 64rem) 33.333vw, (min-width: 40rem) 50vw, 100vw',
+} = Astro.props;
+
+// Never ask for more pixels than the frame has: the archive is mostly 600–999px.
+function widthsFor(photo: Photo): number[] {
+  return [360, 600, 900].filter((w) => w < photo.width).concat(photo.width);
+}
+
+const total = photos.length;
+---
+
+<ul class="gallery-grid">
+  {photos.map((photo, index) => (
+    <li class="gallery-tile">
+      <Image
+        src={photo.image}
+        alt={`${altPrefix}, frame ${index + 1} of ${total}`}
+        widths={widthsFor(photo)}
+        sizes={sizes}
+        loading="lazy"
+        decoding="async"
+      />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .gallery-tile {
+    margin: 0;
+  }
+
+  .gallery-tile :global(img) {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import { site } from '../site';
+import BookingCallToAction from './BookingCallToAction.astro';
+import ContactForm from './ContactForm.astro';
+
+// The property's contact block in one place: the details a guest actually needs, the
+// booking route, and the (demo) enquiry form. Every value is read from `site.ts` so a
+// change to a phone number or the email happens once and cannot drift between pages.
+//
+// The details are shown as a definition list rather than a prose paragraph: each value is
+// individually addressable for a screen-reader user tabbing to a phone or email link, and
+// the labels are real `<dt>` text rather than decoration.
+
+interface Props {
+  /** Render the demo enquiry form. Off for places that only want the details. */
+  withForm?: boolean;
+  heading?: string;
+}
+
+const { withForm = true, heading = 'How to reach us' } = Astro.props;
+
+const details = [
+  { term: 'Hosts', detail: site.hosts },
+  { term: 'Telephone', detail: site.phone.label, href: site.phone.href },
+  {
+    term: site.mobile.term,
+    detail: site.mobile.display,
+    href: site.mobile.href,
+  },
+  { term: 'Email', detail: site.email, href: `mailto:${site.email}` },
+  { term: 'Address', detail: site.address.full },
+];
+---
+
+<section
+  class="contact-panel container-page"
+  aria-labelledby="contact-panel-heading"
+>
+  <h2 id="contact-panel-heading">{heading}</h2>
+  <dl class="contact-list">
+    {details.map((row) => (
+      <div class="contact-row">
+        <dt>{row.term}</dt>
+        <dd>{row.href ? <a href={row.href}>{row.detail}</a> : row.detail}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <div class="contact-booking">
+    <BookingCallToAction context="Bookings are also taken through the online booking page." />
+  </div>
+
+  {withForm && (
+    <div class="contact-form-wrap">
+      <ContactForm />
+    </div>
+  )}
+</section>
+
+<style>
+  .contact-panel {
+    padding-block: var(--space-10) var(--space-16);
+  }
+
+  .contact-panel h2 {
+    margin-block-end: var(--space-6);
+    color: var(--color-accent-ink);
+  }
+
+  .contact-list {
+    margin: 0;
+    padding: 0;
+    max-inline-size: 44ch;
+  }
+
+  .contact-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, auto) 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-3);
+    border-block-end: var(--border-width) solid var(--color-divider);
+  }
+
+  .contact-row dt {
+    font-size: var(--text-body-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .contact-row dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-row a {
+    color: var(--color-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  .contact-booking {
+    padding-block-start: var(--space-8);
+  }
+
+  .contact-form-wrap {
+    padding-block-start: var(--space-10);
+    border-block-start: var(--border-width) solid var(--color-divider);
+    margin-block-start: var(--space-10);
+  }
+
+  @media (max-width: 45rem) {
+    .contact-panel {
+      padding-block: var(--space-8) var(--space-12);
+    }
+
+    .contact-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+// The photograph-led opening band. Text never sits on top of the image: the copy lives on
+// an opaque ivory panel beside it (stacked underneath on a narrow screen). That is a
+// deliberate contrast decision — a translucent scrim over a photograph is the exact pattern
+// this rebuild set out to stop, because a ratio measured against ivory says nothing about
+// whatever the image happens to be behind the letters.
+//
+// The archive is mostly 600–999px and is never upscaled. Requested widths are clamped to the
+// frame's own width, so `astro:assets` is never asked to invent pixels.
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  /** Heading element. A page hero is `h1`; a band lower down passes `h2`. */
+  as?: 'h1' | 'h2';
+  sizes?: string;
+}
+
+const {
+  image,
+  alt,
+  eyebrow,
+  title,
+  lead,
+  as = 'h1',
+  sizes = '(min-width: 60rem) 50vw, 100vw',
+} = Astro.props;
+
+// 640 / 1280 / 1920, capped at the frame's real width, with that width always included so
+// there is at least one width at full resolution.
+const widths = [640, 1280, 1920].filter((w) => w < image.width);
+widths.push(image.width);
+
+const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
+---
+
+<section class="property-hero">
+  <div class="container-page property-hero-inner">
+    <div class="property-hero-copy">
+      {eyebrow && (
+        <p class="eyebrow" data-reveal>
+          {eyebrow}
+        </p>
+      )}
+      <Heading class="property-hero-title" data-reveal data-reveal-delay="70ms">
+        {title}
+      </Heading>
+      {lead && (
+        <p class="property-hero-lead" data-reveal data-reveal-delay="140ms">
+          {lead}
+        </p>
+      )}
+      <div class="property-hero-actions" data-reveal data-reveal-delay="200ms">
+        <slot />
+      </div>
+    </div>
+
+    <div class="property-hero-figure">
+      <Image
+        src={image}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading="eager"
+        fetchpriority="high"
+        class="property-hero-image"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .property-hero {
+    border-block-end: var(--border-width) solid var(--color-divider);
+    background: var(--color-bg);
+  }
+
+  .property-hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: var(--space-8);
+    padding-block: var(--space-10) var(--space-12);
+  }
+
+  .property-hero-copy {
+    display: grid;
+    gap: var(--space-4);
+    max-inline-size: 34ch;
+  }
+
+  .property-hero-title {
+    margin: 0;
+    font-size: var(--text-display-lg);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    color: var(--color-accent-ink);
+    margin-inline-start: -0.045em;
+  }
+
+  .property-hero-lead {
+    margin: 0;
+    font-size: 1.09375rem;
+    line-height: 1.7;
+    max-inline-size: 46ch;
+    color: var(--color-text-muted);
+  }
+
+  .property-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-block-start: var(--space-2);
+  }
+
+  .property-hero-figure {
+    margin: 0;
+  }
+
+  .property-hero-image {
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (min-width: 60rem) {
+    .property-hero-inner {
+      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+      gap: var(--space-12);
+      padding-block: var(--space-16) var(--space-18);
+    }
+  }
+</style>

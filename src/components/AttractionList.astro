@@ -1,0 +1,83 @@
+---
+import AttractionCard from './AttractionCard.astro';
+
+// The one list template for attractions. It sorts by an explicit `order` because the
+// published order is the one guests follow, not filenames. Cards are `<li>` items around a
+// single section heading, so a page of attraction posts keeps a clean h2 → h3 outline.
+
+interface Item {
+  title: string;
+  summary: string;
+  href?: string;
+}
+
+interface Props {
+  heading: string;
+  items: Item[];
+  id?: string;
+  /** Section heading level: h2 on a page, h3 when nested under another heading. */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { heading, items, id, headingLevel = 'h2' } = Astro.props;
+const anchor =
+  id ??
+  heading
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+const Heading = `h${headingLevel.slice(1)}` as 'h2' | 'h3';
+---
+
+<section
+  class="attraction-list container-page"
+  id={anchor}
+  aria-labelledby={`${anchor}-heading`}
+>
+  <Heading id={`${anchor}-heading`} class="attraction-list-heading" data-reveal>
+    {heading}
+  </Heading>
+  <ul class="attraction-grid">
+    {items.map((item) => (
+      <li class="attraction-cell">
+        <AttractionCard
+          title={item.title}
+          summary={item.summary}
+          href={item.href}
+          headingLevel={headingLevel === 'h2' ? 'h3' : 'h4'}
+        />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .attraction-list {
+    padding-block: var(--space-10) var(--space-14);
+  }
+
+  .attraction-list-heading {
+    margin: 0 0 var(--space-6);
+    color: var(--color-accent-ink);
+    max-inline-size: var(--measure-lead);
+  }
+
+  .attraction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+    gap: 0 var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .attraction-cell {
+    padding-inline-end: var(--space-8);
+  }
+
+  @media (max-width: 45rem) {
+    .attraction-cell {
+      padding-inline-end: 0;
+    }
+  }
+</style>

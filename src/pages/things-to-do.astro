@@ -1,0 +1,31 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import AttractionList from '../components/AttractionList.astro';
+
+// The places-to-visit guide the property publishes, one card per attraction post. The order
+// is the explicit `order` field (the previous site's published sequence), never filenames.
+// Cards are titles and one-line summaries only — the third-party logos and photos on the old
+// listing were not carried over — each linking to the post that holds the property's own text.
+const intro = await getEntry('pages', 'things-to-do');
+if (!intro)
+  throw new Error('Missing content: src/content/pages/things-to-do.mdx');
+
+const items = (await getCollection('attractions'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((post) => ({
+    title: post.data.title,
+    summary: post.data.summary,
+    href: `/${post.id}/`,
+  }));
+---
+
+<Layout
+  title="Things To Do"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Things To Do', href: '/things-to-do/' }]}
+>
+  <PageHeader entry={intro} />
+  <AttractionList heading="Places to visit" items={items} />
+</Layout>

@@ -1,0 +1,56 @@
+---
+// One attraction on a list page. Text only by policy: the attraction imagery on the old site
+// was third-party logos (country clubs, casinos, malls), and those were not carried over. A
+// card is a title and the summary the post actually publishes, linking to the article.
+
+interface Props {
+  title: string;
+  summary: string;
+  href?: string;
+  headingLevel?: 'h3' | 'h4';
+}
+
+const { title, summary, href, headingLevel = 'h3' } = Astro.props;
+const Heading = `h${headingLevel.slice(1)}` as 'h3' | 'h4';
+---
+
+<article class="attraction-card">
+  <Heading class="attraction-title">
+    {href ? <a href={href}>{title}</a> : title}
+  </Heading>
+  <p class="attraction-summary">{summary}</p>
+</article>
+
+<style>
+  .attraction-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    block-size: 100%;
+    padding-block: var(--space-4);
+    padding-block-end: var(--space-6);
+    border-block-start: var(--border-width) solid var(--color-divider);
+  }
+
+  .attraction-title {
+    margin: 0;
+    font-size: var(--text-title-sm);
+  }
+
+  .attraction-title :global(a) {
+    color: var(--color-accent-ink);
+    text-decoration: none;
+  }
+
+  .attraction-title :global(a):hover,
+  .attraction-title :global(a):focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+  }
+
+  .attraction-summary {
+    margin: 0;
+    line-height: var(--leading-prose);
+    color: var(--color-text);
+  }
+</style>
