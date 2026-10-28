@@ -375,6 +375,18 @@ import BookingCallToAction from './BookingCallToAction.astro';
       },
       { signal },
     );
+
+    // The sheet is the only navigation below the breakpoint. Resize past it without closing
+    // the sheet and its open state survives: back below the breakpoint the next tap then
+    // *closes* the panel that was never visibly open, so the menu reads as dead until a
+    // refresh resets it. Closing on the way into the desktop width keeps the two states in
+    // step, so the control behaves the same after a resize as after a load. The query mirrors
+    // the header's own `max-width: 80rem` collapse, so it stays correct if that changes.
+    const desktopNav = window.matchMedia('(min-width: 80rem)');
+    const syncOnBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches && !sheet.hidden) setOpen(false);
+    };
+    desktopNav.addEventListener('change', syncOnBreakpoint, { signal });
   }
 
   document.addEventListener('astro:before-swap', () => listeners?.abort());
