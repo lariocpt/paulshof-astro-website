@@ -32,6 +32,9 @@ export function createPolicy(documents) {
     "img-src 'self'",
     "font-src 'self'",
     "connect-src 'self'",
+    // Only the property's own video tours: the privacy-enhanced YouTube embed origin, and
+    // nothing else. frame-ancestors stays in _headers (a directive a meta tag cannot carry).
+    "frame-src 'self' https://www.youtube-nocookie.com",
     `script-src 'self' ${[...hashes.script].sort().join(' ')}`,
     `style-src 'self' ${[...hashes.style].sort().join(' ')}`,
     "script-src-attr 'none'",

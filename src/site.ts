@@ -73,6 +73,7 @@ export const site = {
 export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Gallery', href: '/gallery/' },
+  { label: 'Virtual Tour', href: '/virtual-tours/' },
   { label: 'Rates', href: '/rates/' },
   { label: 'Guest Book', href: '/guest-book/' },
   { label: 'Directions', href: '/map/' },

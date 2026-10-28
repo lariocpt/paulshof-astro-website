@@ -1,0 +1,112 @@
+---
+// A single room/facility video, presented as a click-to-load facade. Nothing is fetched
+// from YouTube until the visitor presses play (privacy + bandwidth), and the embed is the
+// privacy-enhanced nocookie origin. No thumbnail image is pulled in, so the CSP needs no
+// extra image source — only the nocookie frame origin (declared once in the CSP script).
+
+interface Props {
+  id: string;
+  label: string;
+  featured?: boolean;
+}
+
+const { id, label, featured = false } = Astro.props;
+const Heading = featured ? 'h2' : 'h3';
+---
+
+<article
+  class:list={['tour', { 'tour-featured': featured }]}
+  data-tour
+  data-id={id}
+  data-title={label}
+>
+  <Heading class="tour-title">{label}</Heading>
+  <div class="tour-frame" data-tour-frame>
+    <button
+      type="button"
+      class="tour-poster"
+      data-tour-play
+      aria-label={`Play video tour: ${label}`}
+    >
+      <svg
+        class="tour-play"
+        viewBox="0 0 48 48"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle
+          cx="24"
+          cy="24"
+          r="22.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+        <path d="M19 15l14 9-14 9z" fill="currentColor" />
+      </svg>
+      <span class="tour-poster-label">Play tour</span>
+    </button>
+  </div>
+</article>
+
+<style>
+  .tour {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tour-title {
+    margin: 0;
+    font-size: var(--text-title-sm);
+    color: var(--color-text);
+  }
+
+  .tour-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: color-mix(
+      in srgb,
+      var(--color-accent-fill) 8%,
+      var(--color-surface)
+    );
+    border: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-md);
+  }
+
+  .tour-poster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: var(--space-3);
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    color: var(--color-accent-ink);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .tour-play {
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+  }
+
+  .tour-poster:hover .tour-play {
+    color: var(--color-accent-fill);
+  }
+
+  .tour-poster:focus-visible {
+    outline: 3px solid var(--color-accent-ink);
+    outline-offset: -3px;
+  }
+
+  .tour-poster-label {
+    font-size: var(--text-body-sm);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+</style>

@@ -1,0 +1,112 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import TourVideo from '../components/TourVideo.astro';
+
+// The owner's own tour footage, in the order they published it: one film of the whole
+// house, then one per room. Video ids are the property's, taken from their published page.
+const intro = await getEntry('pages', 'virtual-tours');
+if (!intro)
+  throw new Error('Missing content: src/content/pages/virtual-tours.mdx');
+
+const tours = [
+  {
+    id: 'MezOJv68rHs',
+    label: 'A tour of our rooms and facilities',
+    featured: true,
+  },
+  { id: 'HFZFffidjts', label: 'Luxury Room 1 — The Blue Room' },
+  { id: 'HEj37hn_ckM', label: 'Luxury Room 2 — The Orange Room' },
+  { id: '0-uCc0ShmtY', label: 'Luxury Room 3 — The Red Room' },
+  { id: 'afp4sTZlaaY', label: 'Luxury Room 4 — The Black Room' },
+];
+---
+
+<Layout
+  title="Virtual Tour"
+  description={intro.data.description}
+  breadcrumbs={[{ label: 'Virtual Tour', href: '/virtual-tours/' }]}
+>
+  <PageHeader entry={intro} />
+  <section class="tours container-page" aria-label="Video tours">
+    {tours.map((t) => (
+      <TourVideo id={t.id} label={t.label} featured={t.featured} />
+    ))}
+  </section>
+</Layout>
+
+<style>
+  .tours {
+    display: grid;
+    gap: var(--space-8);
+    padding-block-end: var(--space-16);
+  }
+
+  .tours :global(.tour-featured) {
+    gap: var(--space-4);
+  }
+
+  .tours :global(.tour-featured) .tour-frame {
+    border-radius: var(--radius-lg);
+  }
+
+  @media (min-width: 45rem) {
+    .tours {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tours :global(.tour-featured) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+
+<script>
+  // Replace a poster with the privacy-enhanced embed only when the visitor presses play.
+  // Astro processes this module and the CSP integration hashes it, so no inline handler and
+  // no policy weakening are needed.
+  let controller: AbortController | undefined;
+
+  function wireTours() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    for (const play of document.querySelectorAll<HTMLButtonElement>(
+      '[data-tour-play]',
+    )) {
+      play.addEventListener(
+        'click',
+        () => {
+          const tour = play.closest('[data-tour]');
+          const frame = tour?.querySelector<HTMLElement>('[data-tour-frame]');
+          const id = tour?.getAttribute('data-id');
+          const title = tour?.getAttribute('data-title') ?? 'Video tour';
+          if (!frame || !id) return;
+
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+          iframe.title = title;
+          iframe.allow =
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allowFullscreen = true;
+          iframe.setAttribute('loading', 'lazy');
+          Object.assign(iframe.style, {
+            position: 'absolute',
+            inset: '0',
+            width: '100%',
+            height: '100%',
+            border: '0',
+          });
+          frame.replaceChildren(iframe);
+          iframe.focus();
+        },
+        { signal },
+      );
+    }
+  }
+
+  document.addEventListener('astro:page-load', wireTours);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>
