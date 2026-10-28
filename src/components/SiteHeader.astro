@@ -2,13 +2,14 @@
 import { site } from '../site';
 import NavLinks from './NavLinks.astro';
 import BookingCallToAction from './BookingCallToAction.astro';
+import BrandFlower from './BrandFlower.astro';
 
 // The one frame every page shares: brand, routes, phone, and the booking action.
 //
-// The wordmark is set as type rather than shipped as an image: it stays crisp at 200%
-// text, it speaks to a screen reader as the business name, and it cannot be a low-resolution
-// PNG on a phone. The previous site's masthead lettering collided at 400px, which is the
-// failure this layout is built to avoid.
+// The crane-flower mark is an inline decorative SVG; the business name is set as type
+// beside it, not baked into an image. That keeps the name crisp at 200% text, readable to
+// a screen reader, and free of the low-resolution PNG the previous site shipped — and the
+// name wraps instead of colliding at 400px, the failure this layout is built to avoid.
 ---
 
 <header class="site-header">
@@ -27,6 +28,7 @@ import BookingCallToAction from './BookingCallToAction.astro';
 
   <nav class="nav container-page" aria-label="Primary">
     <a class="brand" href="/" aria-label={`${site.name} — home`}>
+      <BrandFlower />
       <span class="brand-word">
         <span class="brand-word-full">{site.name}</span>
         <span class="brand-word-short">{site.shortName}</span>
@@ -145,6 +147,9 @@ import BookingCallToAction from './BookingCallToAction.astro';
   }
 
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
     margin-inline-end: auto;
     color: var(--color-accent-ink);
     text-decoration: none;
