@@ -29,7 +29,7 @@ export function createPolicy(documents) {
     "base-uri 'self'",
     "object-src 'none'",
     "form-action 'self'",
-    "img-src 'self'",
+    "img-src 'self' https://i.ytimg.com",
     "font-src 'self'",
     "connect-src 'self'",
     // Only the property's own video tours: the privacy-enhanced YouTube embed origin, and

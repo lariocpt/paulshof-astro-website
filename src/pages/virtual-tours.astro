@@ -73,6 +73,8 @@ const tours = [
     controller = new AbortController();
     const { signal } = controller;
 
+    loadThumbnails();
+
     for (const play of document.querySelectorAll<HTMLButtonElement>(
       '[data-tour-play]',
     )) {
@@ -104,6 +106,26 @@ const tours = [
         },
         { signal },
       );
+    }
+  }
+
+  // Paint each card with the video's own thumbnail, preferring the full-resolution frame and
+  // falling back where a video only has the standard one. It is a plain image (i.ytimg.com is
+  // allowlisted in img-src); the player itself is still fetched only on play.
+  function loadThumbnails() {
+    for (const tour of document.querySelectorAll<HTMLElement>('[data-tour]')) {
+      const frame = tour.querySelector<HTMLElement>('[data-tour-frame]');
+      const id = tour.getAttribute('data-id');
+      if (!frame || !id) continue;
+      const max = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+      const hq = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+      const show = (url: string) => {
+        frame.style.backgroundImage = `url("${url}")`;
+      };
+      const probe = new Image();
+      probe.onload = () => show(probe.naturalWidth > 200 ? max : hq);
+      probe.onerror = () => show(hq);
+      probe.src = max;
     }
   }
 

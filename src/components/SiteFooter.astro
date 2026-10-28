@@ -42,6 +42,11 @@ import BookingCallToAction from './BookingCallToAction.astro';
             <a href={item.href}>{item.label}</a>
           </li>
         ))}
+        <!-- The tours are kept out of the header nav to match the property's own menu;
+             the footer is where they are reachable site-wide. -->
+        <li>
+          <a href="/virtual-tours/">Virtual Tour</a>
+        </li>
       </ul>
       <div class="footer-booking">
         <BookingCallToAction />
