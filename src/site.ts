@@ -76,5 +76,6 @@ export const navItems = [
   { label: 'Rates', href: '/rates/' },
   { label: 'Guest Book', href: '/guest-book/' },
   { label: 'Directions', href: '/map/' },
+  { label: 'Things To Do', href: '/things-to-do/' },
   { label: 'Contact Us', href: '/contact-us/' },
 ] as const;

@@ -33,7 +33,23 @@ const prose = defineCollection({
   }),
 });
 
+/**
+ * Attraction posts. `order` is the published listing order from the previous site, not the
+ * filename. Body copy is the property's own published text; `description` is a real summary
+ * (the source's own meta echoed each title) and `summary` is the short line the list shows.
+ */
+const attractions = defineCollection({
+  loader: mdx('attractions'),
+  schema: z.object({
+    ...ordered,
+    title: z.string().min(1),
+    description: z.string().min(1),
+    summary: z.string().min(1),
+  }),
+});
+
 export const collections = {
   prose,
   pages,
+  attractions,
 };

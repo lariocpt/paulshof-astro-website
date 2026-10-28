@@ -3,9 +3,12 @@
 # which is gated behind launch (indexing/robots stay off until then).
 #
 #   /767-2/        the empty-slug testimonials page — consolidated into /guest-book/
-#   /v-tours/      the duplicate tour route — one canonical /virtual-tours/ (Phase 6)
-#   /hello-world/  the WordPress-default slug for the Soweto post — re-slugged (Phase 6)
+#   /hello-world/  the WordPress-default slug for the Soweto post — re-slugged to /soweto/
+#
+# The duplicate tour routes (/v-tours/, /virtual-tours/) are not redirected here: their
+# canonical form is an open owner decision (§9.5) and the tour page needs a video-link
+# decision first. A redirect to a route that is not built would 404, so it is added only
+# once that page exists.
 
 /767-2/       /guest-book/          301
-/v-tours/     /virtual-tours/       301
 /hello-world/ /soweto/              301

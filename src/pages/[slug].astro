@@ -1,0 +1,95 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import AttractionArticle from '../components/AttractionArticle.astro';
+import BookingCallToAction from '../components/BookingCallToAction.astro';
+import { site } from '../site';
+
+// One flat route per attraction post (/sun-city/, /soweto/, …), matching the previous
+// site's slugs so existing links survive. Text only — the third-party logos and photos on
+// the old posts were not carried over. The post title is the single h1; body sub-headings
+// are h2 and below.
+export async function getStaticPaths() {
+  const posts = await getCollection('attractions');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  breadcrumbs={[
+    { label: 'Things To Do', href: '/things-to-do/' },
+    { label: post.data.title, href: `/${post.id}/` },
+  ]}
+>
+  <AttractionArticle title={post.data.title} eyebrow="Things to do">
+    <Content />
+  </AttractionArticle>
+
+  <section
+    class="post-related container-page"
+    aria-labelledby="post-related-heading"
+  >
+    <div class="post-related-inner">
+      <h2 id="post-related-heading">After a day out</h2>
+      <p class="post-related-text">
+        Come back to the quiet of Franschoek Lane. Book direct or ask Nicki and
+        Mary about the area.
+      </p>
+      <div class="post-related-actions">
+        <BookingCallToAction />
+        <a class="btn btn-secondary post-related-link" href="/things-to-do/">
+          All things to do
+        </a>
+        <a class="post-related-call" href={site.phone.href}>
+          Call {site.phone.label}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .post-related {
+    padding-block: var(--space-6) var(--space-20);
+  }
+
+  .post-related-inner {
+    border-block-start: var(--border-strong) solid var(--color-divider);
+    padding-block-start: var(--space-8);
+    max-inline-size: var(--measure-prose);
+  }
+
+  .post-related h2 {
+    margin-block-end: var(--space-3);
+    color: var(--color-accent-ink);
+  }
+
+  .post-related-text {
+    margin: 0 0 var(--space-5);
+    line-height: var(--leading-prose);
+  }
+
+  .post-related-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .post-related-link {
+    text-decoration: none;
+  }
+
+  .post-related-call {
+    color: var(--color-accent-ink);
+    font-weight: 700;
+  }
+</style>
