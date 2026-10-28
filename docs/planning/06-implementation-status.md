@@ -1,7 +1,7 @@
 # Implementation status
 
 Working record for the `feat/implement-site` branch. Phases 0–1 were already
-committed; Phases 2–6 are implemented, verified and committed here. The plan is
+committed; Phases 2–7 are implemented, verified and committed here. The plan is
 [IMPLEMENT.md](../../IMPLEMENT.md); scope and defects are
 [04-implementation-handoff.md](04-implementation-handoff.md).
 
@@ -56,6 +56,48 @@ previous slugs (the Soweto post at `/soweto/`).
   line inside a body is kept as published. No attraction imagery or logos were carried
   over, and no facts, prices or opening hours were added.
 
+## §4 acceptance re-run (Phase 7)
+
+Run against `bun run preview` (`:4322`), fresh headless Chromium @400, the same
+conditions as the §4 "Pass" tests. Result per defect:
+
+- **1, 2, 3, 4, 5, 7, 8, 9, 10, 11** — `web_accessibility` @400 across 11 routes
+  (core pages + `/things-to-do/` + three posts + 404): **0 violations, 0 incomplete**,
+  so `label`, `link-name`, `frame-title`, `color-contrast`, `scrollable-region-focusable`,
+  `meta-viewport`, `landmark-one-main`, `region` and `heading-order` are all clean.
+  (No `frame-title` node exists because there is no iframe; the Trustindex widget of
+  defect 4/5 was replaced with static quotes.)
+- **6** — menu is a real `button[aria-expanded]` that closes on Escape; the header now
+  also closes the sheet when resizing up past the breakpoint (see the fix below), so the
+  toggle behaves identically after a resize and after a load.
+- **12, 13** — `web_check` shows no failed requests and no console errors on any page
+  (no favicon 404); built output contains no `wp-content`/`TUXtheme` reference and no
+  `things.php`/`oldsite`/"Back to top" link.
+- **14, 15, 16, 17** — `web_extract_meta` on `/contact-us/`, `/guest-book/`,
+  `/bryanston-country-club/`, `/things-to-do/` and `/montecasino-bird-gardens/`: every
+  description is real prose with no `&nbsp;`, no shortcode blob, no mid-sentence cut and
+  no title echo.
+- **18, 19** — sitemap contains `/soweto/` and none of `/hello-world/`, `/767-2/`,
+  `/v-tours/`, `/virtual-tours/`; no duplicate-h1 testimonials page is built.
+- **21** — `img_missing_alt` 0 everywhere (gallery's 106 images all carry alt).
+- **22** — no `2018` (or any year/copyright line) in rendered HTML; the only `2018` is
+  inside the bundled SIL OFL text for the Fraunces font, and the footer carries no
+  copyright line pending the §9.1 identity decision.
+- **20 — not performed against the build**: `/v-tours/` and `/virtual-tours/` are
+  intentionally unbuilt (owner §9.5), so there is no near-duplicate tour page to test;
+  this acceptance applies once the owner settles the canonical tour route and video links.
+
+**Defect found during Phase 7 and fixed** (`81c8a44`): opening the mobile menu, resizing
+up past the breakpoint and back left the sheet open, so the next tap closed a panel that
+looked shut — the menu read as dead until a manual refresh. The header now closes the
+sheet on crossing into the desktop width. Reproduced and re-verified with a CDP probe that
+drives the wide→narrow→open→wide→narrow→tap sequence.
+
+**Not a §4 acceptance test and therefore not re-run here:** the §2 performance numbers
+were observational, not pass/fail criteria; and link integrity is taken from the
+rendered-output gate (every internal link resolves against `dist`), not `web_link_audit`,
+whose trailing-slash behaviour is a known artifact.
+
 ## Remaining work
 
 **Phase 6 — done except the tour pages.** The 28 attraction posts are migrated as the
@@ -67,8 +109,11 @@ routes `/virtual-tours/` and `/v-tours/` — their canonical form is an owner de
 so any video would be a labelled external link, not an embed), so both routes and their
 redirect stay unbuilt until that is settled.
 
-**Phase 7 — regression.** Re-run the §4 acceptance tools against `bun run preview` on
-the same conditions as the baseline and report any check not actually performed.
+**Phase 7 — done.** The §4 acceptance tools were re-run against the preview above:
+every defect's "Pass" condition holds except defect 20, which is not applicable while the
+tour routes stay unbuilt. One resize-state defect surfaced and was fixed (`81c8a44`).
+Nothing in the site's scope remains unbuilt; only the tour routes and the owner
+decisions in §9 below are open.
 
 ## Outstanding owner decisions (handoff §9)
 
