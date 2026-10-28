@@ -15,6 +15,8 @@ interface Props {
   /** Optional "See all" destination (only for routes that exist). */
   moreHref?: string;
   moreLabel?: string;
+  /** Let tiles open this group in the shared photo viewer (gallery page only). */
+  enableLightbox?: boolean;
 }
 
 const {
@@ -23,6 +25,7 @@ const {
   limit,
   moreHref,
   moreLabel = `See all ${group.label} photos`,
+  enableLightbox = false,
 } = Astro.props;
 
 const photos =
@@ -50,7 +53,11 @@ const Heading = `h${headingLevel.slice(1)}` as 'h2' | 'h3';
       {group.photos.length}{' '}
       {group.photos.length === 1 ? 'photograph' : 'photographs'}
     </p>
-    <GalleryGrid photos={photos} altPrefix={group.label} />
+    <GalleryGrid
+      photos={photos}
+      altPrefix={group.label}
+      lightboxGroup={enableLightbox ? group.id : undefined}
+    />
   </div>
 </section>
 
