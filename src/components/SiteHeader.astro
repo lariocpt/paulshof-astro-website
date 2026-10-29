@@ -234,7 +234,11 @@ import BookingCallToAction from './BookingCallToAction.astro';
     list-style: none;
   }
 
-  .nav-sheet :global(a) {
+  /* Only the route links get the sheet's own link style. The booking button and the phone
+     link are anchored too, but they carry component styles (`.btn-primary`, `.nav-sheet-call`)
+     that a bare `a` selector here would outrank — which is how the button ended up with body
+     text instead of its white contrast colour. */
+  .nav-sheet :global(ul a) {
     display: block;
     padding: var(--space-3) var(--space-5);
     font-family: var(--font-heading);
@@ -244,7 +248,7 @@ import BookingCallToAction from './BookingCallToAction.astro';
     text-decoration: none;
   }
 
-  .nav-sheet :global(a)[aria-current='page'] {
+  .nav-sheet :global(ul a)[aria-current='page'] {
     color: var(--color-accent-ink);
   }
 
