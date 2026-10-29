@@ -17,8 +17,8 @@ reproduced exactly as published; changing them is an owner decision, not a copy 
   previous site (193×148 PNG, 2023), upscaled 4× with RealESRGAN on the local rig and
   recomposited with crisp transparency (evidence and derived master kept out-of-band).
   The header renders it at 84×64 CSS px as decoration beside the type wordmark. The
-  masthead is two rows at desktop widths — crest, name and booking above, routes centred
-  on their own hairline row — and the sticky header condenses to just the route row once
+  masthead is two rows at desktop widths — crest, name and booking above, routes flush
+  left on their own hairline row — and the sticky header condenses to just the route row once
   scrolled past the masthead; phones keep the one-row masthead with the burger sheet.
 - `src/assets/og/default.svg`: source for the 1200×630 social card, with its PNG kept in
   step. Crawlers receive the PNG, not the source SVG.

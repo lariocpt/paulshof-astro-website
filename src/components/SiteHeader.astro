@@ -17,7 +17,7 @@ import logoBadge from '../assets/brand/logo.png';
 // name is already the link's accessible name and the wordmark text, so the image carries
 // an empty alt. An earlier generated flower badge was reverted for being wrong artwork
 // and for crowding a single-row header; the two-row masthead (crest + name + booking,
-// routes centred on their own sticky row) is the previous site's familiar skeleton in
+// routes flush left on their own sticky row) is the previous site's familiar skeleton in
 // this theme's clothes, and it is why the crest can finally be the anchor it was.
 ---
 
@@ -102,11 +102,11 @@ import logoBadge from '../assets/brand/logo.png';
     </div>
   </div>
 
-  <!-- Desktop routes own a row, centred on hairline rules like the page rules below.
-       The header sticks, and scrolling past the masthead condenses it to exactly this
-       row (see the script), so the familiar full masthead greets you at the top and the
-       permanent chrome mid-page is one slim strip. Below the breakpoint the row is gone
-       and the sheet carries the same route list, pinned with the masthead group. -->
+  <!-- Desktop routes own a row, flush left on the content column and ruled like the
+       page rules. The header sticks, and scrolling past the masthead condenses it to
+       exactly this row (see the script), so the familiar full masthead greets you at
+       the top and the permanent chrome mid-page is one slim strip. Below the
+       breakpoint the row is gone and the sheet carries the same route list. -->
   <nav class="nav-row" aria-label="Primary">
     <div class="container-page nav-row-inner">
       <NavLinks class="nav-links" />
@@ -197,7 +197,10 @@ import logoBadge from '../assets/brand/logo.png';
 
   .nav-row-inner {
     display: flex;
-    justify-content: center;
+    /* Routes sit flush with the content column, not centred: the row shares the page's
+       left edge like every other block. The padding is the air the condensed header
+       lives with, so it is measured in row padding, not link padding. */
+    padding-block: var(--space-3);
   }
 
   .brand {
@@ -243,7 +246,7 @@ import logoBadge from '../assets/brand/logo.png';
     position: relative;
     color: var(--color-text);
     text-decoration: none;
-    font-size: var(--text-body-sm);
+    font-size: var(--text-body);
     padding-block: var(--space-1);
   }
 
@@ -387,7 +390,6 @@ import logoBadge from '../assets/brand/logo.png';
   :global(html:not([data-js]) .nav-links) {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
   }
   :global(html:not([data-js])) .nav-burger {
     display: none;
