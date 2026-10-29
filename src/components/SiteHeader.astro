@@ -337,7 +337,11 @@ import logoBadge from '../assets/brand/logo.png';
     text-underline-offset: 0.1875rem;
   }
 
-  @media (max-width: 80rem) {
+  /* Deliberately one pixel short of the script's `min-width: 80rem` desktop test: at
+     exactly 80rem both queries would match, and the mobile rules (hide booking, hide
+     route row) would combine with a condensed desktop header (hide masthead, taking
+     the burger with it) to leave an empty header. Ranges must be disjoint. */
+  @media (max-width: calc(80rem - 1px)) {
     .nav-row {
       display: none;
     }
@@ -455,7 +459,7 @@ import logoBadge from '../assets/brand/logo.png';
     // *closes* the panel that was never visibly open, so the menu reads as dead until a
     // refresh resets it. Closing on the way into the desktop width keeps the two states in
     // step, so the control behaves the same after a resize as after a load. The query mirrors
-    // the header's own `max-width: 80rem` collapse, so it stays correct if that changes.
+    // the header's collapse breakpoint, so it stays correct if that changes.
     const desktopNav = window.matchMedia('(min-width: 80rem)');
     const syncOnBreakpoint = (event: MediaQueryListEvent) => {
       if (event.matches && !sheet.hidden) setOpen(false);
