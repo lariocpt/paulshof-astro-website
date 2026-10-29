@@ -40,10 +40,10 @@ import logoBadge from '../assets/brand/logo.png';
         class="brand-logo"
         src={logoBadge}
         alt=""
-        widths={[42, 84, 126]}
-        sizes="42px"
-        width="42"
-        height="32"
+        widths={[63, 126, 189]}
+        sizes="63px"
+        width="63"
+        height="48"
         loading="eager"
         fetchpriority="high"
       />
@@ -174,8 +174,9 @@ import logoBadge from '../assets/brand/logo.png';
   }
 
   .brand-logo {
-    /* Intrinsic 772×592 crest; the width/height attributes reserve 42×32 CSS px.
-       Sizing lives on the element so the reservation cannot drift from the markup. */
+    /* Intrinsic 772×592 crest; the width/height attributes reserve 63×48 CSS px —
+       a hair under the 68px nav box, leaving the wordmark visually supported rather
+       than dwarfed. Sizing lives on the element so the reservation cannot drift. */
     block-size: auto;
     inline-size: auto;
   }
