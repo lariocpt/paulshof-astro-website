@@ -13,6 +13,10 @@ reproduced exactly as published; changing them is an owner decision, not a copy 
 - `site.theme`: browser chrome and manifest colours, kept aligned with the CSS roles.
 - `src/assets/brand/mark.svg`: the editable vector mark; `public/favicon.svg` is its
   fixed-path copy. Public icon PNGs and the Apple touch icon change at the same time.
+- `src/assets/brand/logo.png`: the header crest badge, the property's own logo from the
+  previous site (193×148 PNG, 2023), upscaled 4× with RealESRGAN on the local rig and
+  recomposited with crisp transparency (evidence and derived master kept out-of-band).
+  The header renders it at 42×32 CSS px as decoration beside the type wordmark.
 - `src/assets/og/default.svg`: source for the 1200×630 social card, with its PNG kept in
   step. Crawlers receive the PNG, not the source SVG.
 - `src/data/photography.ts` and `docs/content/photo-provenance.csv`: the property photo
