@@ -10,18 +10,25 @@ import type { Photo } from '../data/photography';
 // the group heading and the position in the group imply — never a claim about what is in
 // frame. Every tile still carries a real alt, and every tile reserves its box via the Image
 // component's width and height, so nothing reflows while pictures arrive.
+//
+// When `lightboxGroup` is set (the gallery page) each tile becomes a button that opens the
+// shared photo viewer for that group; without it (home-page previews) the tiles stay plain
+// images and behave exactly as before.
 
 interface Props {
   photos: Photo[];
   /** Group label, used as the prefix for sequence-style alt text. */
   altPrefix: string;
   sizes?: string;
+  /** When set, tiles open this group's images in the lightbox viewer. */
+  lightboxGroup?: string;
 }
 
 const {
   photos,
   altPrefix,
   sizes = '(min-width: 64rem) 33.333vw, (min-width: 40rem) 50vw, 100vw',
+  lightboxGroup,
 } = Astro.props;
 
 // Never ask for more pixels than the frame has: the archive is mostly 600–999px.
@@ -33,18 +40,39 @@ const total = photos.length;
 ---
 
 <ul class="gallery-grid">
-  {photos.map((photo, index) => (
-    <li class="gallery-tile">
+  {photos.map((photo, index) => {
+    const alt = `${altPrefix}, frame ${index + 1} of ${total}`;
+    const image = (
       <Image
         src={photo.image}
-        alt={`${altPrefix}, frame ${index + 1} of ${total}`}
+        alt={alt}
         widths={widthsFor(photo)}
         sizes={sizes}
         loading="lazy"
         decoding="async"
       />
-    </li>
-  ))}
+    );
+    return (
+      <li class="gallery-tile">
+        {lightboxGroup ? (
+          <button
+            type="button"
+            class="gallery-zoom"
+            data-lightbox
+            data-group={lightboxGroup}
+            data-label={altPrefix}
+            data-index={index}
+            data-total={total}
+            aria-label={`Enlarge photo: ${alt}`}
+          >
+            {image}
+          </button>
+        ) : (
+          image
+        )}
+      </li>
+    );
+  })}
 </ul>
 
 <style>
@@ -67,5 +95,21 @@ const total = photos.length;
     aspect-ratio: 4 / 3;
     object-fit: cover;
     border-radius: var(--radius-sm);
+  }
+
+  .gallery-zoom {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    border-radius: var(--radius-sm);
+  }
+
+  .gallery-zoom:focus-visible {
+    outline: 3px solid var(--color-accent-ink);
+    outline-offset: 3px;
   }
 </style>

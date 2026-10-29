@@ -3,6 +3,7 @@ import { getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import GallerySection from '../components/GallerySection.astro';
+import GalleryLightbox from '../components/GalleryLightbox.astro';
 import { photoGroups } from '../data/photography';
 
 // The whole gallery, one anchorable section per group the previous site published, in the
@@ -20,7 +21,8 @@ if (!intro) throw new Error('Missing content: src/content/pages/gallery.mdx');
   <PageHeader entry={intro} />
   <div>
     {photoGroups.map((group) => (
-      <GallerySection group={group} headingLevel="h2" />
+      <GallerySection group={group} headingLevel="h2" enableLightbox />
     ))}
   </div>
+  <GalleryLightbox />
 </Layout>

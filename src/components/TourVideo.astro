@@ -1,0 +1,120 @@
+---
+// A single room/facility video, shown as its YouTube thumbnail with a play control, and
+// loaded as a privacy-enhanced nocookie embed only when the visitor presses play. The
+// thumbnail (i.ytimg.com) is set as a background by the page script so the card reads like
+// a video at a glance — as the previous site did — while no YouTube *player* (and no
+// player tracking) loads until an intentional click. Colours come from theme tokens.
+
+interface Props {
+  id: string;
+  label: string;
+  featured?: boolean;
+}
+
+const { id, label, featured = false } = Astro.props;
+const Heading = featured ? 'h2' : 'h3';
+---
+
+<article
+  class:list={['tour', { 'tour-featured': featured }]}
+  data-tour
+  data-id={id}
+  data-title={label}
+>
+  <Heading class="tour-title">{label}</Heading>
+  <div class="tour-frame" data-tour-frame>
+    <button
+      type="button"
+      class="tour-poster"
+      data-tour-play
+      aria-label={`Play video tour: ${label}`}
+    >
+      <svg
+        class="tour-play"
+        viewBox="0 0 48 48"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="24" cy="24" r="22" />
+        <path d="M19 15l14 9-14 9z" />
+      </svg>
+      <span class="tour-poster-label">Play tour</span>
+    </button>
+  </div>
+</article>
+
+<style>
+  .tour {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tour-title {
+    margin: 0;
+    font-size: var(--text-title-sm);
+    color: var(--color-text);
+  }
+
+  .tour-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background-color: color-mix(
+      in srgb,
+      var(--color-accent-fill) 10%,
+      var(--color-surface)
+    );
+    background-size: cover;
+    background-position: center;
+    border: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-md);
+  }
+
+  .tour-poster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: var(--space-3);
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .tour-poster:focus-visible {
+    outline: 3px solid var(--color-accent-ink);
+    outline-offset: -3px;
+  }
+
+  .tour-play {
+    inline-size: 3.75rem;
+    block-size: 3.75rem;
+    filter: drop-shadow(0 1px 3px var(--color-text));
+  }
+
+  .tour-play circle {
+    fill: var(--color-accent-fill);
+    stroke: none;
+  }
+
+  .tour-play path {
+    fill: var(--color-accent-on-fill);
+  }
+
+  .tour-poster:hover .tour-play circle {
+    fill: var(--color-accent-ink);
+  }
+
+  .tour-poster-label {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-body-sm);
+    font-weight: 700;
+    color: var(--color-text);
+    background: var(--color-bg);
+    border-radius: 9999px;
+  }
+</style>

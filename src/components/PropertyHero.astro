@@ -92,7 +92,10 @@ const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
   .property-hero-copy {
     display: grid;
     gap: var(--space-4);
-    max-inline-size: 34ch;
+    /* The display title takes the column's full width so it breaks evenly. A 34ch measure —
+       sized for the body lead — would squeeze the large heading and strand a long word such as
+       "Franschoek" on a line of its own. The lead below keeps its own narrower reading measure,
+       so only the title spans the column. */
   }
 
   .property-hero-title {
