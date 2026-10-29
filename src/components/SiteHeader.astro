@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import { site } from '../site';
 import NavLinks from './NavLinks.astro';
 import BookingCallToAction from './BookingCallToAction.astro';
+import logoBadge from '../assets/brand/logo.png';
 
 // The one frame every page shares: brand, routes, phone, and the booking action.
 //
@@ -9,6 +11,13 @@ import BookingCallToAction from './BookingCallToAction.astro';
 // text, it speaks to a screen reader as the business name, and it cannot be a low-resolution
 // PNG on a phone. The previous site's masthead lettering collided at 400px, which is the
 // failure this layout is built to avoid.
+//
+// Beside it sits the property's own logo badge — the real crest from the previous site,
+// upscaled from its 193px original with transparent edges intact. It is decorative: the
+// name is already the link's accessible name and the wordmark text, so the image carries
+// an empty alt. An earlier generated flower badge was reverted for being wrong artwork
+// and for widening the header row; this one is the owner's logo, sized to keep brand,
+// links, and booking on one measured row down to 1281px.
 ---
 
 <header class="site-header">
@@ -27,6 +36,17 @@ import BookingCallToAction from './BookingCallToAction.astro';
 
   <nav class="nav container-page" aria-label="Primary">
     <a class="brand" href="/" aria-label={`${site.name} — home`}>
+      <Image
+        class="brand-logo"
+        src={logoBadge}
+        alt=""
+        widths={[42, 84, 126]}
+        sizes="42px"
+        width="42"
+        height="32"
+        loading="eager"
+        fetchpriority="high"
+      />
       <span class="brand-word">
         <span class="brand-word-full">{site.name}</span>
         <span class="brand-word-short">{site.shortName}</span>
@@ -145,9 +165,19 @@ import BookingCallToAction from './BookingCallToAction.astro';
   }
 
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     margin-inline-end: auto;
     color: var(--color-accent-ink);
     text-decoration: none;
+  }
+
+  .brand-logo {
+    /* Intrinsic 772×592 crest; the width/height attributes reserve 42×32 CSS px.
+       Sizing lives on the element so the reservation cannot drift from the markup. */
+    block-size: auto;
+    inline-size: auto;
   }
 
   .brand-word {
