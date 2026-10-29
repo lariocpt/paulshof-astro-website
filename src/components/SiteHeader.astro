@@ -16,8 +16,9 @@ import logoBadge from '../assets/brand/logo.png';
 // upscaled from its 193px original with transparent edges intact. It is decorative: the
 // name is already the link's accessible name and the wordmark text, so the image carries
 // an empty alt. An earlier generated flower badge was reverted for being wrong artwork
-// and for widening the header row; this one is the owner's logo, sized to keep brand,
-// links, and booking on one measured row down to 1281px.
+// and for crowding a single-row header; the two-row masthead (crest + name + booking,
+// routes centred on their own sticky row) is the previous site's familiar skeleton in
+// this theme's clothes, and it is why the crest can finally be the anchor it was.
 ---
 
 <header class="site-header">
@@ -34,16 +35,16 @@ import logoBadge from '../assets/brand/logo.png';
     </div>
   </div>
 
-  <nav class="nav container-page" aria-label="Primary">
+  <div class="masthead container-page">
     <a class="brand" href="/" aria-label={`${site.name} — home`}>
       <Image
         class="brand-logo"
         src={logoBadge}
         alt=""
-        widths={[63, 126, 189]}
-        sizes="63px"
-        width="63"
-        height="48"
+        widths={[84, 168, 252]}
+        sizes="84px"
+        width="84"
+        height="64"
         loading="eager"
         fetchpriority="high"
       />
@@ -53,9 +54,7 @@ import logoBadge from '../assets/brand/logo.png';
       </span>
     </a>
 
-    <NavLinks class="nav-links" />
-
-    <div class="nav-end">
+    <div class="masthead-end">
       <!-- The wrapper, not the button, is what the narrow-width rule hides: a scoped style
            in this file cannot reach the root element of a child component that carries its
            own scope, so hiding the child by class would silently do nothing. -->
@@ -87,11 +86,12 @@ import logoBadge from '../assets/brand/logo.png';
         </svg>
       </button>
     </div>
-  </nav>
+  </div>
 
   <!-- Mobile sheet. Rendered in the DOM rather than injected on open so it is present for
        assistive tech and works without waiting on JS; `hidden` keeps it out of the tree
-       until it is asked for. -->
+       until it is asked for. It lives inside the sticky group on phones so opening it
+       mid-page reveals it beside the pinned masthead, not off-screen at the document top. -->
   <div class="nav-sheet" id="nav-sheet" hidden>
     <NavLinks />
     <div class="nav-sheet-foot container-page">
@@ -101,15 +101,31 @@ import logoBadge from '../assets/brand/logo.png';
       </a>
     </div>
   </div>
+
+  <!-- Desktop routes own a row, centred on hairline rules like the page rules below.
+       The header sticks, and scrolling past the masthead condenses it to exactly this
+       row (see the script), so the familiar full masthead greets you at the top and the
+       permanent chrome mid-page is one slim strip. Below the breakpoint the row is gone
+       and the sheet carries the same route list, pinned with the masthead group. -->
+  <nav class="nav-row" aria-label="Primary">
+    <div class="container-page nav-row-inner">
+      <NavLinks class="nav-links" />
+    </div>
+  </nav>
 </header>
 
 <style>
   .site-header {
+    /* Opaque: the previous theme laid navigation over translucent grey panels and body
+       copy showing through, which is the legibility problem this replaces. The header
+       sticks at every width. On desktop it condenses: scrolling past the masthead hides
+       the strip and brand rows, leaving the route row pinned — the boundary is where the
+       nav row reaches the top, so the collapse is invisible. Phones never condense (the
+       script only sets the attribute beside a route row); their header is the original
+       pinned masthead, and the open sheet simply grows it taller from within. */
     position: sticky;
     top: 0;
     z-index: 50;
-    /* Opaque: the previous theme laid navigation over translucent grey panels and body
-       copy showing through, which is the legibility problem this replaces. */
     background: var(--color-bg);
     border-block-end: var(--border-width) solid var(--color-divider);
   }
@@ -157,11 +173,31 @@ import logoBadge from '../assets/brand/logo.png';
     text-underline-offset: 0.1875rem;
   }
 
-  .nav {
+  .masthead {
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    min-block-size: 4.25rem;
+    /* Comforts the 64px crest without padding maths: content height plus breathing room. */
+    min-block-size: 5.5rem;
+  }
+
+  /* Condensing is set by the script at desktop widths only; it is what leaves the route
+     row as the entire pinned header mid-page. Placed after the rows it hides so plain
+     selectors are not outranked by the compound ones above them. */
+  .site-header[data-condensed] .call-strip,
+  .site-header[data-condensed] .masthead {
+    display: none;
+  }
+
+  /* Desktop: the route row is the part of the sticky header that survives condensing. */
+  .nav-row {
+    background: var(--color-bg);
+    border-block: var(--border-width) solid var(--color-divider);
+  }
+
+  .nav-row-inner {
+    display: flex;
+    justify-content: center;
   }
 
   .brand {
@@ -174,9 +210,9 @@ import logoBadge from '../assets/brand/logo.png';
   }
 
   .brand-logo {
-    /* Intrinsic 772×592 crest; the width/height attributes reserve 63×48 CSS px —
-       a hair under the 68px nav box, leaving the wordmark visually supported rather
-       than dwarfed. Sizing lives on the element so the reservation cannot drift. */
+    /* Intrinsic 772×592 crest; the width/height attributes reserve 84×64 CSS px —
+       the nav row gave the brand row its freedom, so the crest is the anchor of the
+       masthead. Sizing lives on the element so the reservation cannot drift. */
     block-size: auto;
     inline-size: auto;
   }
@@ -184,7 +220,7 @@ import logoBadge from '../assets/brand/logo.png';
   .brand-word {
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     line-height: 1.05;
     letter-spacing: -0.015em;
     text-wrap: balance;
@@ -235,7 +271,7 @@ import logoBadge from '../assets/brand/logo.png';
     font-weight: 700;
   }
 
-  .nav-end {
+  .masthead-end {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -299,7 +335,7 @@ import logoBadge from '../assets/brand/logo.png';
   }
 
   @media (max-width: 80rem) {
-    :global(.nav-links) {
+    .nav-row {
       display: none;
     }
     .nav-burger {
@@ -345,12 +381,13 @@ import logoBadge from '../assets/brand/logo.png';
 
   /* Without JavaScript the sheet can never be opened, so the routes are shown inline
      instead - navigation stays available, it just stops being collapsible. */
-  :global(html:not([data-js])) .nav {
-    flex-wrap: wrap;
+  :global(html:not([data-js])) .nav-row {
+    display: block;
   }
   :global(html:not([data-js]) .nav-links) {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
   }
   :global(html:not([data-js])) .nav-burger {
     display: none;
@@ -360,11 +397,11 @@ import logoBadge from '../assets/brand/logo.png';
   }
 
   @media (max-width: 28rem) {
-    .nav {
+    .masthead {
       flex-wrap: wrap;
       padding-block: var(--space-2);
     }
-    .nav-end {
+    .masthead-end {
       flex-wrap: wrap;
       min-inline-size: 0;
     }
@@ -422,6 +459,41 @@ import logoBadge from '../assets/brand/logo.png';
       if (event.matches && !sheet.hidden) setOpen(false);
     };
     desktopNav.addEventListener('change', syncOnBreakpoint, { signal });
+
+    // Desktop condense: past the point where the route row reaches the top, the strip
+    // and brand rows hide and the sticky header is exactly that row. The threshold is
+    // measured, so the swap happens at the boundary where nothing moves on screen.
+    // Phones opt out: their masthead group is the pinned thing already, and hiding it
+    // would hide the only route into the sheet.
+    const header = document.querySelector<HTMLElement>('.site-header');
+    const navRow = document.querySelector<HTMLElement>('.nav-row');
+    if (!header || !navRow) return;
+    let condenseThreshold = 0;
+    const measure = () => {
+      condenseThreshold = Math.max(
+        0,
+        header.offsetHeight - navRow.offsetHeight,
+      );
+    };
+    const syncCondensed = () => {
+      if (desktopNav.matches && window.scrollY > condenseThreshold) {
+        header.toggleAttribute('data-condensed', true);
+      } else {
+        header.removeAttribute('data-condensed');
+      }
+    };
+    measure();
+    syncCondensed();
+    window.addEventListener('scroll', syncCondensed, { passive: true, signal });
+    window.addEventListener(
+      'resize',
+      () => {
+        measure();
+        syncCondensed();
+      },
+      { signal },
+    );
+    desktopNav.addEventListener('change', syncCondensed, { signal });
   }
 
   document.addEventListener('astro:before-swap', () => listeners?.abort());
