@@ -5,5 +5,10 @@
   //
   // It has to run before the stylesheet paints: set any later and already-rendered
   // content would flash visible, then disappear.
+  //
+  // ClientRouter's swap deletes this attribute — the swap re-applies only the
+  // server-rendered attributes on <html> — and this inline script is never re-run,
+  // so the Layout script reasserts it on every `astro:after-swap`. Keep the two in
+  // step; `verify-source.mjs` enforces that any runtime <html> attribute is.
   document.documentElement.setAttribute('data-js', '');
 })();

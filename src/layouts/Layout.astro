@@ -172,6 +172,20 @@ const { title, description, breadcrumbs, schema, noindex, image, imageAlt } =
         deadline = setTimeout(revealAll, 2500);
       }
 
+      // The ClientRouter swap deletes every attribute the runtime has put on <html>
+      // and re-applies only the fetched page's server-rendered ones
+      // (`swapRootAttributes`, astro/dist/transitions/swap-functions.js). The flag
+      // `head-init.js` writes is a runtime attribute, and the inline script that
+      // sets it is never re-run after its first execution. Without reasserting it
+      // here, the first client-side navigation silently puts every `[data-js]`-
+      // keyed rule back on its no-script footing — which is how the header came to
+      // show the desktop route row, burger gone, at mobile widths after one click.
+      // `astro:after-swap` is the earliest hook after the clear, and it runs before
+      // the browser paints the new page, so the restore cannot be seen.
+      const reassertDataJs = () =>
+        document.documentElement.setAttribute('data-js', '');
+
+      document.addEventListener('astro:after-swap', reassertDataJs);
       document.addEventListener('astro:before-swap', cleanupReveals);
       document.addEventListener('astro:page-load', wireReveals);
     </script>
