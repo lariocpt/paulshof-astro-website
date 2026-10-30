@@ -30,11 +30,21 @@ try {
 } catch {
   /* The npm lockfile is expected to be absent. */
 }
+// Every attribute the ClientRouter swap will clear off <html> (the swap re-applies
+// only the fetched page's server-rendered attributes, and inline head scripts never
+// re-run). Each one must be reasserted from the shared Layout on `astro:after-swap`
+// — losing `data-js` mid-session is how the header once came up in its no-script
+// footing, desktop route row at mobile widths with the burger gone.
+const runtimeRootAttributes = new Set();
 for await (const path of walk(resolve(root, 'src'))) {
-  if (!/\.(astro|mdx|css|ts)$/.test(path)) continue;
+  if (!/\.(astro|mdx|css|ts|js)$/.test(path)) continue;
   const source = await readFile(path, 'utf8');
   const name = relative(root, path);
   const report = (message) => failures.push(`${name}: ${message}`);
+  for (const set of source.matchAll(
+    /documentElement\.setAttribute\('([\w-]+)'/g,
+  ))
+    runtimeRootAttributes.add(set[1]);
   if (/fonts\.(?:googleapis|gstatic)\.com/.test(source))
     report('Use local font assets.');
   if (/\.(?:astro|mdx)$/.test(path)) {
@@ -77,6 +87,26 @@ for await (const path of walk(resolve(root, 'src'))) {
       report('Use rem/em for typography and spacing.');
     }
   }
+}
+try {
+  const layout = await readFile(
+    resolve(root, 'src/layouts/Layout.astro'),
+    'utf8',
+  );
+  const swaps = /astro:after-swap/.test(layout);
+  for (const attribute of runtimeRootAttributes) {
+    if (
+      !swaps ||
+      !layout.includes(`documentElement.setAttribute('${attribute}'`)
+    )
+      failures.push(
+        `src/layouts/Layout.astro: reassert '${attribute}' on 'astro:after-swap'; the ClientRouter swap clears it.`,
+      );
+  }
+} catch {
+  failures.push(
+    'Missing src/layouts/Layout.astro for the swap-attribute check.',
+  );
 }
 if (failures.length) {
   console.error(failures.join('\n'));
