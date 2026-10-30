@@ -1,82 +1,145 @@
 ---
-import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
+import type { HeroSlide } from '../data/hero-slides';
 
-// The photograph-led opening band. Text never sits on top of the image: the copy lives on
-// an opaque ivory panel beside it (stacked underneath on a narrow screen). That is a
-// deliberate contrast decision — a translucent scrim over a photograph is the exact pattern
-// this rebuild set out to stop, because a ratio measured against ivory says nothing about
-// whatever the image happens to be behind the letters.
+// The photograph-led opening band, rotating through five slides: copy and frame change
+// together, and text never sits on top of an image. The copy lives on the opaque ivory
+// panel beside the photograph (stacked underneath on a narrow screen), and the slide
+// dots sit below the grid on that same panel. Both are deliberate contrast decisions —
+// a translucent scrim over a photograph is the exact pattern this rebuild set out to
+// stop, because a ratio measured against ivory says nothing about whatever the image
+// happens to be behind the letters, and dots overlaid on a photograph inherit the
+// same problem.
 //
-// The archive is mostly 600–999px and is never upscaled. Requested widths are clamped to the
-// frame's own width, so `astro:assets` is never asked to invent pixels.
+// Every slide renders into the HTML. Without script the first slide is what shows —
+// the reveal attributes keep that first paint exactly what it was before the banner —
+// and search engines still see all the copy. Inactive slides hide with `visibility`,
+// which also removes them from the tab order and the accessibility tree; the script
+// additionally marks them `inert` so hidden links can never be focused mid-crossfade.
+//
+// The archive is mostly 600–999px and is never upscaled. Requested widths are clamped
+// to the frame's own width, so `astro:assets` is never asked to invent pixels.
 
 interface Props {
-  image: ImageMetadata;
-  alt: string;
-  eyebrow?: string;
-  title: string;
-  lead?: string;
-  /** Heading element. A page hero is `h1`; a band lower down passes `h2`. */
-  as?: 'h1' | 'h2';
+  slides: HeroSlide[];
   sizes?: string;
 }
 
-const {
-  image,
-  alt,
-  eyebrow,
-  title,
-  lead,
-  as = 'h1',
-  sizes = '(min-width: 60rem) 50vw, 100vw',
-} = Astro.props;
+const { slides, sizes = '(min-width: 60rem) 50vw, 100vw' } = Astro.props;
 
-// 640 / 1280 / 1920, capped at the frame's real width, with that width always included so
-// there is at least one width at full resolution.
-const widths = [640, 1280, 1920].filter((w) => w < image.width);
-widths.push(image.width);
-
-const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
+// 640 / 1280 / 1920, capped at the frame's real width, with that width always included
+// so there is at least one width at full resolution.
+function widthsFor(width: number): number[] {
+  const widths = [640, 1280, 1920].filter((w) => w < width);
+  widths.push(width);
+  return widths;
+}
 ---
 
-<section class="property-hero">
+<section class="property-hero" data-hero>
   <div class="container-page property-hero-inner">
     <div class="property-hero-copy">
-      {eyebrow && (
-        <p class="eyebrow" data-reveal>
-          {eyebrow}
-        </p>
-      )}
-      <Heading class="property-hero-title" data-reveal data-reveal-delay="70ms">
-        {title}
-      </Heading>
-      {lead && (
-        <p class="property-hero-lead" data-reveal data-reveal-delay="140ms">
-          {lead}
-        </p>
-      )}
+      <div class="property-hero-slides" data-hero-slides>
+        {slides.map(
+          (slide, index) => (
+            <article
+              class:list={[
+                'property-hero-slide',
+                index === 0 && 'property-hero-slide--active',
+              ]}
+              data-hero-slide
+            >
+              {slide.eyebrow && (
+                <p class="eyebrow" data-reveal={index === 0 ? '' : undefined}>
+                  {slide.eyebrow}
+                </p>
+              )}
+              {index === 0 ? (
+                <h1
+                  class="property-hero-title"
+                  data-reveal
+                  data-reveal-delay="70ms"
+                >
+                  {slide.title}
+                </h1>
+              ) : (
+                <p class="property-hero-title">{slide.title}</p>
+              )}
+              <p
+                class="property-hero-lead"
+                data-reveal={index === 0 ? '' : undefined}
+                data-reveal-delay={index === 0 ? '140ms' : undefined}
+              >
+                {slide.lead.map((part) =>
+                  part.href ? <a href={part.href}>{part.text}</a> : part.text,
+                )}
+              </p>
+            </article>
+          ),
+          // Only the first slide carries the reveal attributes; the rotator's own
+          // CSS owns the visibility of the rest.
+        )}
+      </div>
       <div class="property-hero-actions" data-reveal data-reveal-delay="200ms">
         <slot />
       </div>
     </div>
 
     <div class="property-hero-figure">
-      <Image
-        src={image}
-        alt={alt}
-        widths={widths}
-        sizes={sizes}
-        loading="eager"
-        fetchpriority="high"
-        class="property-hero-image"
-      />
+      <div class="property-hero-figures" data-hero-figures>
+        {slides.map((slide, index) => (
+          <Image
+            src={slide.photo.image}
+            alt={slide.alt}
+            widths={widthsFor(slide.photo.width)}
+            sizes={sizes}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : undefined}
+            class:list={[
+              'property-hero-image',
+              index === 0 && 'property-hero-image--active',
+            ]}
+            data-hero-image
+          />
+        ))}
+      </div>
     </div>
+
+    {slides.length > 1 && (
+      <div
+        class="property-hero-dots"
+        data-hero-dots
+        role="group"
+        aria-label="Photo slides"
+      >
+        {slides.map(
+          (slide, index) => (
+            <button
+              type="button"
+              class:list={[
+                'property-hero-dot',
+                index === 0 && 'property-hero-dot--active',
+              ]}
+              data-hero-dot
+              aria-label={`Slide ${index + 1}: ${slide.title}`}
+              aria-current={index === 0 ? 'true' : undefined}
+            ></button>
+          ),
+          // A button per slide, labelled by its title: the dots are reachable by
+          // keyboard, and a hidden slide is never the only way to reach its links
+          // because the rotator pauses while the section has focus.
+        )}
+      </div>
+    )}
   </div>
 </section>
 
 <style>
   .property-hero {
+    /* One duration for every crossfade in the banner — copy, frame and dots move
+       together so a slide change reads as one event. */
+    --hero-crossfade: 450ms;
+
     border-block-end: var(--border-width) solid var(--color-divider);
     background: var(--color-bg);
   }
@@ -85,7 +148,8 @@ const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    gap: var(--space-8);
+    row-gap: var(--space-6);
+    column-gap: var(--space-8);
     padding-block: var(--space-10) var(--space-12);
   }
 
@@ -96,6 +160,33 @@ const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
        sized for the body lead — would squeeze the large heading and strand a long word such as
        "Franschoek" on a line of its own. The lead below keeps its own narrower reading measure,
        so only the title spans the column. */
+  }
+
+  /* The copy slides share one grid cell, so the column is as tall as the tallest
+     slide and never jumps when the banner rotates. `visibility` (not `display`)
+     keeps every slide laid out — and every slide's links in the document for a
+     crawler — while keeping inactive ones out of the tab order. */
+  .property-hero-slides {
+    display: grid;
+  }
+
+  .property-hero-slide {
+    grid-area: 1 / 1;
+    display: grid;
+    gap: var(--space-4);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--hero-crossfade) var(--ease-out-quint),
+      visibility 0s linear var(--hero-crossfade);
+  }
+
+  .property-hero-slide--active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--hero-crossfade) var(--ease-out-quint),
+      visibility 0s;
   }
 
   .property-hero-title {
@@ -126,18 +217,221 @@ const Heading = `h${as.slice(1)}` as 'h1' | 'h2';
     margin: 0;
   }
 
-  .property-hero-image {
-    inline-size: 100%;
-    block-size: auto;
+  /* A stable 4:3 frame for every slide: the archive holds 4:3 and 3:2 frames, and
+     `object-fit: cover` keeps the band the same size through a rotation instead of
+     letting each photograph reflow the page. */
+  .property-hero-figures {
+    display: grid;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
+  }
+
+  .property-hero-image {
+    grid-area: 1 / 1;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--hero-crossfade) var(--ease-out-quint),
+      visibility 0s linear var(--hero-crossfade);
+  }
+
+  .property-hero-image--active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--hero-crossfade) var(--ease-out-quint),
+      visibility 0s;
+  }
+
+  /* Below the grid, on the ivory panel — never over a photograph, for the same
+     contrast reason as the copy. Left-aligned with the copy column above. */
+  .property-hero-dots {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: var(--space-1);
+    /* Pull the first dot's 24px hit area back so its visible circle lines up with
+       the text edge of the copy column. */
+    margin-inline-start: -0.4375rem;
+  }
+
+  .property-hero-dot {
+    position: relative;
+    flex-shrink: 0;
+    inline-size: var(--space-6);
+    block-size: var(--space-6);
+  }
+
+  .property-hero-dot::before {
+    content: '';
+    position: absolute;
+    inset: 0.4375rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-accent-ink) 32%, transparent);
+    transition: background-color var(--hero-crossfade) var(--ease-out-quint);
+  }
+
+  .property-hero-dot:hover::before {
+    background: color-mix(in srgb, var(--color-accent-ink) 60%, transparent);
+  }
+
+  .property-hero-dot--active::before {
+    background: var(--color-accent-fill);
   }
 
   @media (min-width: 60rem) {
     .property-hero-inner {
       grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
-      gap: var(--space-12);
+      row-gap: var(--space-6);
+      column-gap: var(--space-12);
       padding-block: var(--space-16) var(--space-18);
     }
   }
+
+  /* Reduced motion: the banner still rotates and the dots still work, but every
+     change lands in one frame instead of fading. The interval itself is gated the
+     same way in script. */
+  @media (prefers-reduced-motion: reduce) {
+    .property-hero-slide,
+    .property-hero-image,
+    .property-hero-dot::before {
+      transition: none;
+    }
+  }
 </style>
+
+<script>
+  // The banner rotation. Each hero on the page is wired on its own; timers and
+  // listeners are torn down on `astro:before-swap`, exactly like the reveal script
+  // in the layout. Without script the first slide simply stays — the same page a
+  // crawler or a script-free browser sees.
+  //
+  // Auto-advance obeys `prefers-reduced-motion` and pauses while the section is
+  // hovered or focused, so nobody loses a slide they are reading or reaching for.
+  // The dots always work; under reduced motion a change lands in one frame (the
+  // CSS drops the crossfade) instead of never happening.
+
+  const ROTATE_MS = 6000;
+  const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /** One teardown per wired section: stop the timer, drop the listeners. */
+  const cleanups: Array<() => void> = [];
+
+  function wireHero(root: HTMLElement) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-hero-slide]')];
+    const dots = [
+      ...root.querySelectorAll<HTMLButtonElement>('[data-hero-dot]'),
+    ];
+    const images = [...root.querySelectorAll<HTMLElement>('[data-hero-image]')];
+    if (slides.length < 2 || dots.length !== slides.length) return;
+    // A restore from back/forward cache fires `astro:page-load` on the same DOM
+    // without a swap in between; wiring it twice would double the rotation speed.
+    if (root.dataset.heroWired) return;
+    root.dataset.heroWired = 'true';
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let current = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    let paused = false;
+
+    function setActive(index: number) {
+      current = index;
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle('property-hero-slide--active', active);
+        if (active) slide.removeAttribute('inert');
+        else slide.setAttribute('inert', '');
+      });
+      images.forEach((image, i) => {
+        image.classList.toggle('property-hero-image--active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        const active = i === index;
+        dot.classList.toggle('property-hero-dot--active', active);
+        if (active) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+    }
+
+    const stop = () => {
+      if (timer !== undefined) {
+        clearInterval(timer);
+        timer = undefined;
+      }
+    };
+    const start = () => {
+      if (paused || reduceQuery.matches || timer !== undefined) return;
+      timer = setInterval(
+        () => setActive((current + 1) % slides.length),
+        ROTATE_MS,
+      );
+    };
+    const pause = () => {
+      paused = true;
+      stop();
+    };
+    const resume = () => {
+      paused = false;
+      start();
+    };
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener(
+        'click',
+        () => {
+          // A manual choice restarts the wait rather than being overruled by a
+          // timer that was already most of the way through.
+          setActive(index);
+          stop();
+          start();
+        },
+        { signal },
+      );
+    });
+
+    root.addEventListener('pointerenter', pause, { signal });
+    root.addEventListener('pointerleave', resume, { signal });
+    root.addEventListener('focusin', pause, { signal });
+    root.addEventListener(
+      'focusout',
+      (event: FocusEvent) => {
+        // Moving between two controls inside the hero is not leaving it.
+        const next = event.relatedTarget;
+        if (!(next instanceof Node) || !root.contains(next)) resume();
+      },
+      { signal },
+    );
+    reduceQuery.addEventListener(
+      'change',
+      () => (reduceQuery.matches ? stop() : start()),
+      { signal },
+    );
+
+    // The static markup renders slide 1 as active; adopting `inert` here puts every
+    // slide — shown or hidden — in the state the rotation expects.
+    setActive(0);
+    start();
+    cleanups.push(() => {
+      stop();
+      controller.abort();
+    });
+  }
+
+  function wireHeroes() {
+    for (const root of document.querySelectorAll<HTMLElement>('[data-hero]')) {
+      wireHero(root);
+    }
+  }
+
+  function cleanupHeroes() {
+    for (const cleanup of cleanups.splice(0)) cleanup();
+  }
+
+  document.addEventListener('astro:page-load', wireHeroes);
+  document.addEventListener('astro:before-swap', cleanupHeroes);
+</script>

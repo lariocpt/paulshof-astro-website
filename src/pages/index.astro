@@ -9,6 +9,7 @@ import LocationPanel from '../components/LocationPanel.astro';
 import BookingCallToAction from '../components/BookingCallToAction.astro';
 import { site } from '../site';
 import { heroPhoto, photoGroups } from '../data/photography';
+import { additionalHeroSlides, type HeroSlide } from '../data/hero-slides';
 import { featuredGuestQuotes } from '../data/guestbook';
 import {
   directionsRouteLabel,
@@ -35,22 +36,34 @@ const grounds = photoGroups.find(
   (group) => group.id === 'exterior-and-gardens',
 );
 const roomsGroup = photoGroups.find((group) => group.id === 'room-1');
+
+// The opening slide is assembled here from `home.mdx` — the page description and meta
+// image come from the same entry — with the four slides the banner adds
+// (`hero-slides.ts`) following it, so no copy can drift between the two sources.
+const heroLead = intro.body;
+if (!heroLead?.trim())
+  throw new Error('Missing the opening copy in src/content/pages/home.mdx');
+const heroAlt =
+  'A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton.';
+const heroSlides: HeroSlide[] = [
+  {
+    eyebrow: intro.data.eyebrow,
+    title: intro.data.heading,
+    lead: [{ text: heroLead }],
+    photo: heroPhoto,
+    alt: heroAlt,
+  },
+  ...additionalHeroSlides,
+];
 ---
 
 <Layout
   title="Home"
   description={intro.data.description}
   image={heroPhoto.image}
-  imageAlt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
+  imageAlt={heroAlt}
 >
-  <PropertyHero
-    image={heroPhoto.image}
-    alt="A bedroom at No 5 On Franschoek, a bed and breakfast in Paulshof, Sandton."
-    eyebrow={intro.data.eyebrow}
-    title={intro.data.heading}
-    lead={intro.body}
-    sizes="(min-width: 60rem) 50vw, 100vw"
-  >
+  <PropertyHero slides={heroSlides}>
     <BookingCallToAction />
     <a class="btn btn-secondary hero-rates" href="/rates/">
       Rates and what's included
