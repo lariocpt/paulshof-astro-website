@@ -190,6 +190,11 @@ function widthsFor(width: number): number[] {
   }
 
   .property-hero-title {
+    /* The later slides set this title on a `p` (one `h1` per page), and a `p`
+       inherits the body sans — the heading's serif and weight come from the global
+       `h1` rule alone. Restate them here so every slide's title is the same face. */
+    font-family: var(--font-heading);
+    font-weight: 600;
     margin: 0;
     font-size: var(--text-display-lg);
     line-height: 1.12;
