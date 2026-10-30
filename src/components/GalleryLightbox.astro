@@ -185,6 +185,9 @@
     alt: string;
     label: string;
     total: number;
+    /** The photo's own pixel size, so the viewer reserves the right box before decoding. */
+    width: number;
+    height: number;
   }
 
   let controller: AbortController | undefined;
@@ -207,14 +210,9 @@
 
     // The viewer's image is created at runtime and pointed at an already-optimised tile
     // frame, so it is not a content image and never sits in the markup as a raw image tag.
-    let image = figure.querySelector<HTMLImageElement>('.lightbox-img');
-    if (!image) {
-      image = document.createElement('img');
-      image.className = 'lightbox-img';
-      image.alt = '';
-      figure.prepend(image);
-    }
-    const viewerImg = image;
+    // It is created on the first open rather than at wiring: an unopened dialog has no
+    // business holding a dimensionless image in the document.
+    let viewerImg: HTMLImageElement | undefined;
 
     let frames: Frame[] = [];
     let pos = 0;
@@ -242,9 +240,19 @@
 
     const render = () => {
       const frame = frames[pos];
-      if (!frame) return;
+      if (!frame || !viewerImg) return;
       viewerImg.src = frame.src;
       viewerImg.alt = frame.alt;
+      // The tile carries the photo's real dimensions; hand them to the viewer too, so
+      // the box is reserved before the picture decodes — CSS caps the size, the
+      // attributes only supply the aspect ratio.
+      if (frame.width > 0 && frame.height > 0) {
+        viewerImg.width = frame.width;
+        viewerImg.height = frame.height;
+      } else {
+        viewerImg.removeAttribute('width');
+        viewerImg.removeAttribute('height');
+      }
       caption.textContent = `${frame.label} — photo ${pos + 1} of ${frame.total}`;
       // Warm the neighbours so stepping feels instant.
       for (const offset of [-1, 1]) {
@@ -261,6 +269,17 @@
 
     const open = (trigger: HTMLElement) => {
       lastTrigger = trigger;
+      if (!viewerImg) {
+        viewerImg =
+          figure.querySelector<HTMLImageElement>('.lightbox-img') ?? undefined;
+        if (!viewerImg) {
+          const created = document.createElement('img');
+          created.className = 'lightbox-img';
+          created.alt = '';
+          figure.prepend(created);
+          viewerImg = created;
+        }
+      }
       const group = trigger.getAttribute('data-group') ?? '';
       const selector = `[data-lightbox][data-group="${CSS.escape(group)}"]`;
       const tiles = Array.from(
@@ -273,6 +292,8 @@
           alt: tileImg?.getAttribute('alt') ?? '',
           label: tile.getAttribute('data-label') ?? '',
           total: Number(tile.getAttribute('data-total')) || tiles.length,
+          width: Number(tileImg?.getAttribute('width')) || 0,
+          height: Number(tileImg?.getAttribute('height')) || 0,
         };
       });
       const start = Number(trigger.getAttribute('data-index'));
